@@ -1,16 +1,10 @@
-import Details from "./details";
 import Sidebar from "./sidebar";
-import StudentsTable from "./studentsTable";
+import StudentsTable from "./StudentsTable";
 import StudentAddForm from "./StudentAddForm";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard";
-export default function Layout({
-  studentsList,
-  setStudentsList,
-  theme,
-  toggleTheme,
-}) {
+export default function Layout({ setStudentsList, theme, toggleTheme }) {
   const [open, setOpen] = useState(true);
   const toggle = () => setOpen(!open);
 
@@ -25,28 +19,14 @@ export default function Layout({
 
       <main className="content">
         <Routes>
-          <Route path="/" element={<Dashboard studentsList={studentsList} />} />
+          <Route path="/" element={<Dashboard />} />
           <Route
             path="/add"
-            element={
-              <StudentAddForm
-                studentsList={studentsList}
-                setStudentsList={setStudentsList}
-              />
-            }
+            element={<StudentAddForm setStudentsList={setStudentsList} />}
           />
           <Route
             path="/table"
-            element={
-              <StudentsTable
-                studentsList={studentsList}
-                setStudentsList={setStudentsList}
-              />
-            }
-          />
-          <Route
-            path="/details"
-            element={<Details student={studentsList[0]} />}
+            element={<StudentsTable setStudentsList={setStudentsList} />}
           />
         </Routes>
       </main>

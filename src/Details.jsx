@@ -1,6 +1,6 @@
 import React from "react";
 import { FaTable, FaUserGraduate } from "react-icons/fa";
-function Details({ student, setDetails }) {
+function Details({ student, setShowing }) {
   return (
     <div className="details-container" data-testid="details-container">
       <div className="card details-card">
@@ -38,7 +38,7 @@ function Details({ student, setDetails }) {
             <div className="coming-soon-badge">Feature Expanding Soon</div>
           </div>
         )}
-        <button onClick={() => setDetails(false)} className="back-btn">
+        <button onClick={() => setShowing(false)} className="back-btn">
           go back
         </button>
       </div>

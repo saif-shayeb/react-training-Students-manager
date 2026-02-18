@@ -1,17 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./studentAddForm.css";
 import { toast } from "react-toastify";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import deleteStudent, { addStudent, updateStudent } from "./Student";
+import { StudentsListContext } from "./StudentContext";
 
-function StudentAddForm({
-  studentsList,
-  setStudentsList,
-  studentEdit,
-  isEdit,
-  setShow,
-}) {
+function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
+  const studentsList = useContext(StudentsListContext);
   const [student, setStudent] = useState(
     isEdit
       ? studentEdit

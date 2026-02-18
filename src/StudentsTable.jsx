@@ -6,19 +6,22 @@ import { MdModeEdit } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Details from "./details";
 import React from "react";
 import deleteStudent from "./Student";
 import StudentAddForm from "./StudentAddForm";
+import { StudentsListContext } from "./StudentContext";
 
 const MotionTr = motion(Tr);
 
-export default function StudentsTable({ studentsList, setStudentsList }) {
+export default function StudentsTable({ setStudentsList }) {
   const [searchquery, setSearchQuery] = useState("");
   const [selectedStudent, setSelectedStudent] = useState();
   const [showDetails, setShowDetails] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const studentsList = useContext(StudentsListContext);
+
   const handleDelete = (id) => {
     const deleted = deleteStudent({ id, studentsList, setStudentsList });
     if (deleted) {
