@@ -80,12 +80,12 @@ test("search student name should display only the student with this name", async
   render(<Wrapper />);
 
   const searchTf = screen.getByTestId("search-test");
-  await user.type(searchTf, "ahmad khalil");
+  await user.type(searchTf, "Mohammad");
   await waitFor(() => {
     expect(
-      screen.queryByTestId("3f9c1c3e-7b2e-4e6a-9a1d-5f8b2c4d7e91"),
+      screen.queryByTestId("3f9c1c3e-7b2e-4e6a-9a1d-5f8b2c4d7e89"),
     ).toHaveTextContent(
-      "Ahmad KhalilBirth Date2002-05-14Email Addressahmad@example.comGPA3.6",
+      " NameMohammad SaberBirth Date2002-05-14Email AddressMo@example.comGPA3.6ActionsDelete",
     );
     const tbody = screen.getByTestId("tbody");
     const rows = within(tbody).getAllByRole("row");
