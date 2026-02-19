@@ -1,27 +1,26 @@
-import React from "react";
-import { useLocalStorage } from "./useLocalStorage";
-import { toast } from "react-toastify";
-export default function deleteStudent({ id, studentsList, setStudentsList }) {
-  const exists = studentsList.find((s) => s.id == id);
-  if (!exists) return false;
-  const newList = studentsList.filter((s) => s.id != id);
-  setStudentsList(newList);
-  return true;
-}
+import React, { useContext } from "react";
 
-export function addStudent(student, studentsList, setStudentsList) {
-  const res = studentsList.filter((s) => s.email == student.email);
-  if (res.length > 0) {
-    return false;
-  } else {
-    setStudentsList([...studentsList, student]);
+export default function deleteStudent(id, list, dispatch) {
+  const res = list.some((s) => s.id == id);
+  if (res) {
+    dispatch({ type: "delete", student: { id: id } });
     return true;
   }
+  return false;
 }
-export function updateStudent(student, setStudensList, studensList) {
+
+export function addStudent(student, dispatch, list) {
+  const res = list.some((s) => s.email === student.email);
+  if (res) {
+    return false;
+  }
+  dispatch({ type: "add", student: student });
+  return true;
+}
+export function updateStudent(student, dispatch, studensList) {
   const filtered = studensList.filter((s) => s.id != student.id);
   const exists = filtered.some((s) => s.email === student.email);
   if (exists) return false;
-  setStudensList([...filtered, student]);
+  dispatch({ type: "update", student: student });
   return true;
 }

@@ -11,19 +11,24 @@ import Details from "./details";
 import React from "react";
 import deleteStudent from "./Student";
 import StudentAddForm from "./StudentAddForm";
-import { StudentsListContext } from "./StudentContext";
+import {
+  StudentsListContext,
+  StudentsListDispatchContext,
+} from "./StudentContext";
 
 const MotionTr = motion(Tr);
 
-export default function StudentsTable({ setStudentsList }) {
+export default function StudentsTable() {
   const [searchquery, setSearchQuery] = useState("");
   const [selectedStudent, setSelectedStudent] = useState();
   const [showDetails, setShowDetails] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const studentsList = useContext(StudentsListContext);
+  const dispatch = useContext(StudentsListDispatchContext);
+  console.log(studentsList);
 
   const handleDelete = (id) => {
-    const deleted = deleteStudent({ id, studentsList, setStudentsList });
+    const deleted = deleteStudent(id, studentsList, dispatch);
     if (deleted) {
       toast.info("Student record removed.", {
         icon: <MdDeleteForever />,
@@ -128,13 +133,11 @@ export default function StudentsTable({ setStudentsList }) {
         </div>
       )}
       {showDetails && (
-        <Details student={selectedStudent} setDetails={setShowDetails} />
+        <Details student={selectedStudent} setShowing={setShowDetails} />
       )}
       {showEdit && (
         <StudentAddForm
           studentEdit={selectedStudent}
-          setStudentsList={setStudentsList}
-          studentsList={studentsList}
           isEdit={true}
           setShow={setShowEdit}
         />

@@ -1,112 +1,123 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import "./studentAddForm.css";
 import { toast } from "react-toastify";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import deleteStudent, { addStudent, updateStudent } from "./Student";
-import { StudentsListContext } from "./StudentContext";
+import { addStudent, updateStudent } from "./Student";
+import {
+  StudentsListContext,
+  StudentsListDispatchContext,
+} from "./StudentContext";
+import useForm from "./useForm";
 
-function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
+function StudentAddForm({ studentEdit, isEdit, setShow }) {
   const studentsList = useContext(StudentsListContext);
-  const [student, setStudent] = useState(
-    isEdit
-      ? studentEdit
-      : {
-          id: uuidv4(),
-          firstName: "",
-          lastName: "",
-          birthDate: "",
-          gpa: 0,
-          email: "",
-        },
-  );
-  console.log(student);
-  function handleSubmit() {
-    if (isEdit) {
-      const updated = updateStudent(student, setStudentsList, studentsList);
-      if (updated) {
-        toast.success("Student updated succesfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setShow(false);
+  const dispatch = useContext(StudentsListDispatchContext);
+
+  const initialValues = isEdit
+    ? studentEdit
+    : {
+      id: uuidv4(),
+      firstName: "",
+      lastName: "",
+      birthDate: "",
+      gpa: 0,
+      email: "",
+    };
+
+  const { values, setValues, handleChange, handleSubmit, handleReset } =
+    useForm(initialValues, (formData) => {
+      if (isEdit) {
+        const updated = updateStudent(formData, dispatch, studentsList);
+        if (updated) {
+          toast.success("Student updated succesfully!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setShow(false);
+        } else {
+          toast.error("already exists a student with the same email", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
       } else {
-        toast.error("already exists a student with the same email", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        const added = addStudent(formData, dispatch, studentsList);
+        if (added) {
+          toast.success("Student added succesfully!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          handleReset({
+            id: uuidv4(),
+            firstName: "",
+            lastName: "",
+            birthDate: "",
+            gpa: 0,
+            email: "",
+          });
+        } else {
+          toast.error("already exists!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
       }
-    } else {
-      const added = addStudent(student, studentsList, setStudentsList);
-      if (added) {
-        toast.success("Student added succesfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setStudent({
-          firstName: "",
-          lastName: "",
-          birthDate: "",
-          gpa: 0,
-          email: "",
-        });
-      } else {
-        toast.error("already exists!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
+    });
+
+  // Update form values if studentEdit changes (e.g. when switching between students to edit)
+  useEffect(() => {
+    if (isEdit && studentEdit) {
+      setValues(studentEdit);
     }
-  }
+  }, [studentEdit, isEdit, setValues]);
+
   return (
     <div className="form-container">
       <div className="card">
-        <h2 className="form-title">Add New Student</h2>
+        <h2 className="form-title">
+          {isEdit ? "Edit Student" : "Add New Student"}
+        </h2>
         <p className="form-subtitle">
-          Enter student information below to register them in the system.
+          {isEdit
+            ? "Update student information below."
+            : "Enter student information below to register them in the system."}
         </p>
 
-        <form
-          className="student-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
+        <form className="student-form" onSubmit={handleSubmit}>
           <div className="form-grid">
             <div className="form-group">
               <label htmlFor="first-name">First Name</label>
               <input
                 type="text"
+                name="firstName"
                 placeholder="John"
-                value={student.firstName}
-                onChange={(e) =>
-                  setStudent({ ...student, firstName: e.target.value })
-                }
+                value={values.firstName}
+                onChange={handleChange}
                 id="first-name"
                 required
               />
@@ -116,11 +127,10 @@ function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
               <label htmlFor="last-name">Last Name</label>
               <input
                 type="text"
+                name="lastName"
                 placeholder="Doe"
-                value={student.lastName}
-                onChange={(e) => {
-                  setStudent({ ...student, lastName: e.target.value });
-                }}
+                value={values.lastName}
+                onChange={handleChange}
                 id="last-name"
                 required
               />
@@ -130,11 +140,10 @@ function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
               <label htmlFor="email">Email Address</label>
               <input
                 type="email"
+                name="email"
                 placeholder="john.doe@example.com"
-                value={student.email}
-                onChange={(e) =>
-                  setStudent({ ...student, email: e.target.value })
-                }
+                value={values.email}
+                onChange={handleChange}
                 id="email"
                 required
               />
@@ -144,10 +153,9 @@ function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
               <label htmlFor="bDate">Date of Birth</label>
               <input
                 type="date"
-                value={student.birthDate}
-                onChange={(e) =>
-                  setStudent({ ...student, birthDate: e.target.value })
-                }
+                name="birthDate"
+                value={values.birthDate}
+                onChange={handleChange}
                 id="bDate"
                 required
               />
@@ -157,10 +165,9 @@ function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
               <label htmlFor="gpa">GPA (0.00 - 4.00)</label>
               <input
                 type="number"
-                value={student.gpa}
-                onChange={(e) =>
-                  setStudent({ ...student, gpa: e.target.value })
-                }
+                name="gpa"
+                value={values.gpa}
+                onChange={handleChange}
                 id="gpa"
                 min={0}
                 max={4}
@@ -172,7 +179,11 @@ function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
 
           <div className="form-actions">
             {isEdit && (
-              <button className="cancelbtn" onClick={() => setShow(false)}>
+              <button
+                type="button"
+                className="cancelbtn"
+                onClick={() => setShow(false)}
+              >
                 Cancel
               </button>
             )}
@@ -185,4 +196,5 @@ function StudentAddForm({ setStudentsList, studentEdit, isEdit, setShow }) {
     </div>
   );
 }
+
 export default StudentAddForm;
