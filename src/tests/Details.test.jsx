@@ -22,7 +22,7 @@ function WrapperWithStudent() {
   };
 
   return showDetails ? (
-    <Details student={student} setDetails={setShowDetails} />
+    <Details student={student} setShowing={setShowDetails} />
   ) : (
     <div data-testid="closed">Closed</div>
   );

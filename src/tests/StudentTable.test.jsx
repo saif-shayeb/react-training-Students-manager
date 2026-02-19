@@ -7,12 +7,18 @@ import React, { useState } from "react";
 import { cleanup } from "@testing-library/react";
 import { afterEach } from "vitest";
 import { waitFor } from "@testing-library/react";
-
+import { useLocalStorage } from "../useLocalStorage";
+import {
+  StudentsListContext,
+  StudentsListDispatchContext,
+} from "../StudentContext";
+//todo fix search test
 afterEach(() => {
   cleanup();
 });
+
 function Wrapper() {
-  const [studentsList, setStudentsList] = useState([
+  const [studentsList, studentsListDispatch] = useLocalStorage("studentsList", [
     {
       id: "3f9c1c3e-7b2e-4e6a-9a1d-5f8b2c4d7e91",
       firstName: "Ahmad",
@@ -32,10 +38,13 @@ function Wrapper() {
   ]);
 
   return (
-    <StudentsTable
-      studentsList={studentsList}
-      setStudentsList={setStudentsList}
-    />
+    <>
+      <StudentsListContext value={studentsList}>
+        <StudentsListDispatchContext value={studentsListDispatch}>
+          <StudentsTable />
+        </StudentsListDispatchContext>
+      </StudentsListContext>
+    </>
   );
 }
 

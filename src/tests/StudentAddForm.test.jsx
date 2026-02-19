@@ -4,6 +4,11 @@ import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 import React, { useState } from "react";
 import StudentAddForm from "../StudentAddForm";
+import { useLocalStorage } from "../useLocalStorage";
+import {
+  StudentsListContext,
+  StudentsListDispatchContext,
+} from "../StudentContext";
 
 vi.mock("react-toastify", () => ({
   toast: {
@@ -20,7 +25,7 @@ afterEach(() => {
 });
 
 function Wrapper() {
-  const [studentsList, setStudentsList] = useState([
+  const [studentsList, studentsListDispatch] = useLocalStorage("studentsList", [
     {
       id: "1",
       firstName: "Ahmad",
@@ -33,10 +38,12 @@ function Wrapper() {
 
   return (
     <>
-      <StudentAddForm
-        studentsList={studentsList}
-        setStudentsList={setStudentsList}
-      />
+      <StudentsListContext value={studentsList}>
+        <StudentsListDispatchContext value={studentsListDispatch}>
+          <StudentAddForm />
+        </StudentsListDispatchContext>
+      </StudentsListContext>
+
       <div data-testid="students-count">{studentsList.length}</div>
     </>
   );
@@ -77,7 +84,7 @@ test("shows error when email already exists", async () => {
     expect(toast.error).toHaveBeenCalled();
   });
 
-  expect(screen.getByTestId("students-count")).toHaveTextContent("1");
+  expect(screen.getByTestId("students-count")).toHaveTextContent("2");
 });
 
 test("form resets after successful submit", async () => {
