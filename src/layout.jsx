@@ -4,6 +4,7 @@ import StudentAddForm from "./StudentAddForm";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard";
+import Notfound from "./Notfound";
 export default function Layout({ setStudentsList, theme, toggleTheme }) {
   const [open, setOpen] = useState(true);
   const toggle = () => setOpen(!open);
@@ -27,6 +28,10 @@ export default function Layout({ setStudentsList, theme, toggleTheme }) {
           <Route
             path="/table"
             element={<StudentsTable setStudentsList={setStudentsList} />}
+          />
+          <Route
+            path="*"
+            element={<Notfound />}
           />
         </Routes>
       </main>
