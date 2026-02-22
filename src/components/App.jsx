@@ -3,13 +3,13 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useLocalStorageTheme } from "../hooks/localStorageTheme";
 import { ToastContainer } from "react-toastify";
 import React from "react";
-import Layout from "../components/layout";
-import { BrowserRouter as Router } from "react-router-dom";
 import {
   StudentsListContext,
   StudentsListDispatchContext,
 } from "../contexts/StudentContext";
 import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
+
 export default function App() {
   const [studentsList, studentsListDispatch] = useLocalStorage(
     "studentsList",
@@ -29,17 +29,13 @@ export default function App() {
     return <h1> Loading...</h1>;
   }
   return (
-    <StudentsListContext value={studentsList}>
-      <StudentsListDispatchContext value={studentsListDispatch}>
-        <Suspense fallback={Loading}>
-          <Router>
-            <ToastContainer />
-            <Suspense fallback={Loading}>
-              <Layout theme={theme} toggleTheme={toggleTheme} />
-            </Suspense>
-          </Router>
+    <StudentsListContext.Provider value={studentsList}>
+      <StudentsListDispatchContext.Provider value={studentsListDispatch}>
+        <Suspense fallback={<Loading />}>
+          <ToastContainer />
+          <Outlet context={{ theme, toggleTheme }} />
         </Suspense>
-      </StudentsListDispatchContext>
-    </StudentsListContext>
+      </StudentsListDispatchContext.Provider>
+    </StudentsListContext.Provider>
   );
 }

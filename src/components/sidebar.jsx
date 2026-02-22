@@ -9,9 +9,6 @@ import {
   FaMoon,
 } from "react-icons/fa";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
   NavLink,
 } from "react-router-dom";
 import { motion } from "framer-motion";

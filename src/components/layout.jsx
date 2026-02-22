@@ -1,13 +1,11 @@
 import Sidebar from "./sidebar";
-import StudentsTable from "./StudentsTable";
-import StudentAddForm from "./StudentAddForm";
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./Dashboard";
-import Notfound from "./Notfound";
-export default function Layout({ setStudentsList, theme, toggleTheme }) {
+import { Outlet, useOutletContext } from "react-router-dom";
+
+export default function Layout() {
   const [open, setOpen] = useState(true);
   const toggle = () => setOpen(!open);
+  const { theme, toggleTheme } = useOutletContext();
 
   return (
     <div className="layout">
@@ -19,21 +17,7 @@ export default function Layout({ setStudentsList, theme, toggleTheme }) {
       />
 
       <main className="content">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route
-            path="/add"
-            element={<StudentAddForm setStudentsList={setStudentsList} />}
-          />
-          <Route
-            path="/table"
-            element={<StudentsTable setStudentsList={setStudentsList} />}
-          />
-          <Route
-            path="*"
-            element={<Notfound />}
-          />
-        </Routes>
+        <Outlet />
       </main>
     </div>
   );
