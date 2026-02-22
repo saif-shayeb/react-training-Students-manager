@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { cleanup } from "@testing-library/react";
 import { afterEach } from "vitest";
 import { waitFor } from "@testing-library/react";
-import { useLocalStorage } from "../useLocalStorage";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import {
   StudentsListContext,
   StudentsListDispatchContext,

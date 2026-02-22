@@ -1,5 +1,5 @@
 import "../styles/App.css";
-import { useLocalStorage } from "../useLocalStorage";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useLocalStorageTheme } from "../hooks/localStorageTheme";
 import { ToastContainer } from "react-toastify";
 import React from "react";
