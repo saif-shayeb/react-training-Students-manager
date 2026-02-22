@@ -1,14 +1,14 @@
 import { useContext, useEffect } from "react";
-import "./studentAddForm.css";
+import "../styles/StudentAddForm.css";
 import { toast } from "react-toastify";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import { addStudent, updateStudent } from "./Student";
+import { addStudent, updateStudent } from "../utils/Student";
 import {
   StudentsListContext,
   StudentsListDispatchContext,
-} from "./StudentContext";
-import useForm from "./useForm";
+} from "../contexts/StudentContext";
+import useForm from "../hooks/useForm";
 
 function StudentAddForm({ studentEdit, isEdit, setShow }) {
   const studentsList = useContext(StudentsListContext);
@@ -17,13 +17,13 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
   const initialValues = isEdit
     ? studentEdit
     : {
-      id: uuidv4(),
-      firstName: "",
-      lastName: "",
-      birthDate: "",
-      gpa: 0,
-      email: "",
-    };
+        id: uuidv4(),
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        gpa: 0,
+        email: "",
+      };
 
   const { values, setValues, handleChange, handleSubmit, handleReset } =
     useForm(initialValues, (formData) => {

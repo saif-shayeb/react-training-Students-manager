@@ -1,6 +1,6 @@
 import { FaPlus, FaTable, FaUserGraduate } from "react-icons/fa";
 import React, { useContext } from "react";
-import { StudentsListContext } from "./StudentContext";
+import { StudentsListContext } from "../contexts/StudentContext";
 export default function Dashboard({}) {
   const studentsList = useContext(StudentsListContext);
   const stats = [

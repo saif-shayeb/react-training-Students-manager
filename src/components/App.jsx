@@ -1,14 +1,14 @@
-import "./App.css";
-import { useLocalStorage } from "./useLocalStorage";
-import { useLocalStorageTheme } from "./localStorageTheme";
+import "../styles/App.css";
+import { useLocalStorage } from "../useLocalStorage";
+import { useLocalStorageTheme } from "../hooks/localStorageTheme";
 import { ToastContainer } from "react-toastify";
-import React, { useState } from "react";
-import Layout from "./layout";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import Layout from "../components/layout";
+import { BrowserRouter as Router } from "react-router-dom";
 import {
   StudentsListContext,
   StudentsListDispatchContext,
-} from "./StudentContext";
+} from "../contexts/StudentContext";
 import { Suspense } from "react";
 export default function App() {
   const [studentsList, studentsListDispatch] = useLocalStorage(

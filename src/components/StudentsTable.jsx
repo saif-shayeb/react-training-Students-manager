@@ -1,6 +1,6 @@
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
-import "./StudentsTable.css";
+import "../styles/StudentsTable.css";
 import { MdDeleteForever } from "react-icons/md";
 import { MdModeEdit } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
@@ -9,12 +9,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useContext, useState } from "react";
 import Details from "./details";
 import React from "react";
-import deleteStudent from "./Student";
+import deleteStudent from "../utils/Student";
 import StudentAddForm from "./StudentAddForm";
 import {
   StudentsListContext,
   StudentsListDispatchContext,
-} from "./StudentContext";
+} from "../contexts/StudentContext";
 
 const MotionTr = motion(Tr);
 
