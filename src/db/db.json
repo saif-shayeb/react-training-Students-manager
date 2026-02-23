@@ -1,0 +1,21 @@
+{
+  "$schema": "./././node_modules/json-server/schema.json",
+  "student": [
+    {
+      "id": "3f9c1c3e-7b2e-4e6a-9a1d-5f8b2c4d7e91",
+      "firstName": "Ahmad",
+      "lastName": "Khalil",
+      "birthDate": "2002-05-14",
+      "gpa": 3.6,
+      "email": "ahmad@example.com"
+    },
+    {
+      "id": "3f9c1c3e-7b2e-4e6a-9a1d-5f8b2c4d7e89",
+      "firstName": "Mohammad",
+      "lastName": "Saber",
+      "birthDate": "2002-05-14",
+      "gpa": 3.6,
+      "email": "Mo@example.com"
+    }
+  ]
+}
