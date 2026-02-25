@@ -3,32 +3,28 @@ import "../styles/StudentAddForm.css";
 import { toast } from "react-toastify";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import { addStudent, updateStudent } from "../utils/Student";
-import {
-  StudentsListContext,
-  StudentsListDispatchContext,
-} from "../contexts/StudentContext";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { StudentsListDispatchContext } from "../contexts/StudentContext";
 import useForm from "../hooks/useForm";
 
 function StudentAddForm({ studentEdit, isEdit, setShow }) {
-  const studentsList = useContext(StudentsListContext);
-  const dispatch = useContext(StudentsListDispatchContext);
+  const { addStudent, updateStudent } = useContext(StudentsListDispatchContext);
 
   const initialValues = isEdit
     ? studentEdit
     : {
-        id: uuidv4(),
-        firstName: "",
-        lastName: "",
-        birthDate: "",
-        gpa: 0,
-        email: "",
-      };
+      id: uuidv4(),
+      firstName: "",
+      lastName: "",
+      birthDate: "",
+      gpa: 0,
+      email: "",
+    };
 
-  const { values, setValues, handleChange, handleSubmit, handleReset } =
-    useForm(initialValues, (formData) => {
+  const { values, setValues, handleChange, handleSubmit, handleReset, isLoading } =
+    useForm(initialValues, async (formData) => {
       if (isEdit) {
-        const updated = updateStudent(formData, dispatch, studentsList);
+        const updated = await updateStudent(formData);
         if (updated) {
           toast.success("Student updated succesfully!", {
             position: "top-right",
@@ -54,7 +50,8 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
           });
         }
       } else {
-        const added = addStudent(formData, dispatch, studentsList);
+        const added = await addStudent(formData);
+        console.log(added);
         if (added) {
           toast.success("Student added succesfully!", {
             position: "top-right",
@@ -89,7 +86,6 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
       }
     });
 
-  // Update form values if studentEdit changes (e.g. when switching between students to edit)
   useEffect(() => {
     if (isEdit && studentEdit) {
       setValues(studentEdit);
@@ -187,8 +183,15 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
                 Cancel
               </button>
             )}
-            <button type="submit" className="submit-btn">
-              {isEdit ? "Update Student" : "Add Student"}
+            <button type="submit" className="submit-btn" disabled={isLoading}>
+              {isLoading ? (
+                <div className="btn-content">
+                  <AiOutlineLoading3Quarters className="spinner" />
+                  <span>{isEdit ? "Updating..." : "Adding..."}</span>
+                </div>
+              ) : (
+                <>{isEdit ? "Update Student" : "Add Student"}</>
+              )}
             </button>
           </div>
         </form>

@@ -15,9 +15,16 @@ const useForm = (initialValues, onSubmit) => {
         setValues(newValues || initialValues);
     };
 
-    const handleSubmit = (e) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async (e) => {
         if (e && e.preventDefault) e.preventDefault();
-        onSubmit(values);
+        setIsLoading(true);
+        try {
+            await onSubmit(values);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return {
@@ -26,6 +33,7 @@ const useForm = (initialValues, onSubmit) => {
         handleChange,
         handleSubmit,
         handleReset,
+        isLoading,
     };
 };
 

@@ -3,12 +3,20 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useLocalStorageTheme } from "../hooks/localStorageTheme";
 import { ToastContainer } from "react-toastify";
 import React from "react";
-import {
-  StudentsListContext,
-  StudentsListDispatchContext,
-} from "../contexts/StudentContext";
+import { StudentsProvider } from "../contexts/StudentContext";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
+import ErrorBoundary from "./ErrorBoundary";
+
+function Loading() {
+  return (
+    <div className="empty-state">
+      <div className="loading-content">
+        <h1>Loading...</h1>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [studentsList, studentsListDispatch] = useLocalStorage(
@@ -25,17 +33,15 @@ export default function App() {
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
-  function Loading() {
-    return <h1> Loading...</h1>;
-  }
+
   return (
-    <StudentsListContext.Provider value={studentsList}>
-      <StudentsListDispatchContext.Provider value={studentsListDispatch}>
-        <Suspense fallback={<Loading />}>
-          <ToastContainer />
-          <Outlet context={{ theme, toggleTheme }} />
-        </Suspense>
-      </StudentsListDispatchContext.Provider>
-    </StudentsListContext.Provider>
+    <StudentsProvider>
+      <ErrorBoundary>
+
+        <ToastContainer />
+        <Outlet context={{ theme, toggleTheme }} />
+
+      </ErrorBoundary>
+    </StudentsProvider>
   );
 }

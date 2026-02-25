@@ -1,20 +1,21 @@
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import "../styles/StudentsTable.css";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { MdModeEdit } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Details from "./details";
 import React from "react";
-import deleteStudent from "../utils/Student";
 import StudentAddForm from "./StudentAddForm";
 import {
   StudentsListContext,
   StudentsListDispatchContext,
 } from "../contexts/StudentContext";
+import axios from "axios";
 
 const MotionTr = motion(Tr);
 
@@ -23,12 +24,11 @@ export default function StudentsTable() {
   const [selectedStudent, setSelectedStudent] = useState();
   const [showDetails, setShowDetails] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const studentsList = useContext(StudentsListContext);
-  const dispatch = useContext(StudentsListDispatchContext);
-  console.log(studentsList);
-
+  const { studentsList, error, loading } = useContext(StudentsListContext);
+  const { deleteStudent } = useContext(StudentsListDispatchContext);
+  const [page, setPage] = useState(1);
   const handleDelete = (id) => {
-    const deleted = deleteStudent(id, studentsList, dispatch);
+    const deleted = deleteStudent(id);
     if (deleted) {
       toast.info("Student record removed.", {
         icon: <MdDeleteForever />,
@@ -47,13 +47,24 @@ export default function StudentsTable() {
     setSelectedStudent(student);
     setShowEdit(true);
   }
-
-  const result = studentsList.filter((stu) =>
+  const filteredStudents = useMemo(() => studentsList.filter((stu) =>
     (stu.firstName + " " + stu.lastName)
       .toLowerCase()
       .includes(searchquery.trim().toLowerCase()),
-  );
-  const rows = result.map((student) => (
+  ), [studentsList, searchquery]);
+
+  const totalPages = Math.ceil(filteredStudents.length / 10);
+
+  const paginatedStudents = useMemo(() => {
+    const start = (page - 1) * 10;
+    return filteredStudents.slice(start, start + 10);
+  }, [filteredStudents, page]);
+
+  // Reset to first page when search query changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchquery]);
+  const rows = paginatedStudents.map((student) => (
     <MotionTr
       key={student.id}
       data-testid={student.id}
@@ -120,18 +131,63 @@ export default function StudentsTable() {
                   <Th className="actions-header">Actions</Th>
                 </Tr>
               </Thead>
-              <Tbody>
-                <AnimatePresence mode="popLayout">{rows}</AnimatePresence>
-              </Tbody>
+              {!loading && !error && (
+                <Tbody>
+                  <AnimatePresence mode="popLayout">{rows}</AnimatePresence>
+                </Tbody>
+              )}
             </Table>
-            {studentsList.length === 0 && (
+            {studentsList.length === 0 && !loading && !error && (
               <div className="empty-state">
                 <p>No student records found. Add one to get started!</p>
+              </div>
+            )}
+            {loading && (
+              <div className="empty-state">
+                <div className="loading-content">
+                  <AiOutlineLoading3Quarters className="spinner" />
+                  <p>Loading student records...</p>
+                </div>
+              </div>
+            )}
+            {error && (
+              <div className="empty-state" style={{ color: "red" }}>
+                <p>Error:({error.message})</p>
+              </div>
+            )}
+            {totalPages > 1 && (
+              <div className="pagination-container">
+                <button
+                  className="pagination-btn"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  <MdChevronLeft /> Previous
+                </button>
+                <div className="pagination-numbers">
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i + 1}
+                      className={`pagination-number ${page === i + 1 ? "active" : ""}`}
+                      onClick={() => setPage(i + 1)}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="pagination-btn"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                >
+                  Next <MdChevronRight />
+                </button>
               </div>
             )}
           </div>
         </div>
       )}
+
       {showDetails && (
         <Details student={selectedStudent} setShowing={setShowDetails} />
       )}

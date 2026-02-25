@@ -1,8 +1,8 @@
 import { FaPlus, FaTable, FaUserGraduate } from "react-icons/fa";
 import React, { useContext } from "react";
 import { StudentsListContext } from "../contexts/StudentContext";
-export default function Dashboard({ }) {
-  const studentsList = useContext(StudentsListContext);
+export default function Dashboard({}) {
+  const { studentsList } = useContext(StudentsListContext);
   const stats = [
     {
       label: "Total Students",
@@ -14,9 +14,9 @@ export default function Dashboard({ }) {
       label: "Average GPA",
       value: studentsList.length
         ? (
-          studentsList.reduce((acc, s) => acc + parseFloat(s.gpa), 0) /
-          studentsList.length
-        ).toFixed(2)
+            studentsList.reduce((acc, s) => acc + parseFloat(s.gpa), 0) /
+            studentsList.length
+          ).toFixed(2)
         : "0.00",
       icon: <FaTable />,
       color: "var(--secondary)",
