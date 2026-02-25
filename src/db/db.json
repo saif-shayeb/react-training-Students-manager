@@ -2,14 +2,6 @@
   "$schema": "./././node_modules/json-server/schema.json",
   "student": [
     {
-      "id": "1ed41492-2020-4855-ae60-8bd524b12ef4",
-      "firstName": "John",
-      "lastName": "Smith",
-      "birthDate": "1995-03-15",
-      "gpa": 3.75,
-      "email": "john.smith@email.com"
-    },
-    {
       "id": "2fe52503-3131-5966-bf71-9ce635c23df5",
       "firstName": "Emily",
       "lastName": "Johnson",
@@ -730,12 +722,36 @@
       "email": "roy.powell@email.com"
     },
     {
-      "id": "fbc39a63-fa54-407c-8b76-07955e8b81c1",
-      "firstName": "Saifff",
+      "id": "7f506ddf-9c79-46de-90f1-13300192efad",
+      "firstName": "Saif",
       "lastName": "Shayeb",
-      "birthDate": "2026-02-23",
-      "gpa": 4,
-      "email": "sshayep33@gmail.com"
+      "birthDate": "2026-02-12",
+      "gpa": 0,
+      "email": "sshayep222@gmail.com"
+    },
+    {
+      "id": "7f506ddf-9c79-46de-90f1-13300192efad",
+      "firstName": "Saif",
+      "lastName": "Shayeb",
+      "birthDate": "2026-02-12",
+      "gpa": 0,
+      "email": "sshayep2222@gmail.com"
+    },
+    {
+      "id": "efe80d0d-0816-4b20-a0cd-8eda91c5f9b2",
+      "firstName": "Saif",
+      "lastName": "Shayeb",
+      "birthDate": "2026-02-24",
+      "gpa": 0,
+      "email": "sshayep@gmail.com"
+    },
+    {
+      "id": "1e36b0ed-3da9-47fe-8ef6-5fa2999c02ad",
+      "firstName": "Saif",
+      "lastName": "Shayeb",
+      "birthDate": "2026-02-18",
+      "gpa": 0,
+      "email": "sshayep22@gmail.com"
     }
   ]
 }

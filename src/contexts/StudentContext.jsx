@@ -41,7 +41,14 @@ export function StudentsProvider({ children }) {
         dispatch({ type: "SET_STUDENTS", payload: res.data });
       } catch (e) {
         setError(e);
-        toast.error("Failed to fetch students");
+        toast.error(
+          <>
+            Failed to fetch students
+            <br />
+            ({e.message})
+          </>,
+          { toastId: "fetch-error" }
+        );
       } finally {
         setLoading(false);
       }
@@ -53,16 +60,16 @@ export function StudentsProvider({ children }) {
   async function addStudent(student) {
     const exists = studentsList.some((s) => s.email === student.email);
 
-    if (exists) return false;
+    if (exists) return { status: "already exists", message: "already exists a student with the same email" };
 
     try {
       setLoading(true);
       const res = await axios.post(API_URL, student);
       dispatch({ type: "ADD_STUDENT", payload: res.data });
-      return true;
+      return { status: "success", message: res.statusText };
     } catch (e) {
       setError(e);
-      return false;
+      return { status: "error", message: e.message };
     } finally {
       setLoading(false);
     }
@@ -73,10 +80,10 @@ export function StudentsProvider({ children }) {
       setLoading(true);
       await axios.delete(`${API_URL}/${id}`);
       dispatch({ type: "DELETE_STUDENT", payload: id });
-      return true;
+      return { status: "success", message: res.statusText };
     } catch (e) {
       setError(e);
-      return false;
+      return { status: "error", message: e.message };
     } finally {
       setLoading(false);
     }
@@ -86,7 +93,7 @@ export function StudentsProvider({ children }) {
     const newList = studentsList.filter((s) => s.id != updatedStudent.id);
     const duplicate = newList.some((s) => s.email === updatedStudent.email);
     if (duplicate) {
-      return false;
+      return { status: "already exists", message: "already exists" };
     }
     try {
       setLoading(true);
@@ -95,10 +102,10 @@ export function StudentsProvider({ children }) {
         updatedStudent,
       );
       dispatch({ type: "UPDATE_STUDENT", payload: res.data });
-      return true;
+      return { status: "success", message: res.statusText };
     } catch (e) {
       setError(e);
-      return false;
+      return { status: "error", message: e.message };
     } finally {
       setLoading(false);
     }

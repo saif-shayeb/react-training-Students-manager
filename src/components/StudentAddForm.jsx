@@ -23,46 +23,21 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
 
   const { values, setValues, handleChange, handleSubmit, handleReset, isLoading } =
     useForm(initialValues, async (formData) => {
-      if (isEdit) {
-        const updated = await updateStudent(formData);
-        if (updated) {
-          toast.success("Student updated succesfully!", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          setShow(false);
-        } else {
-          toast.error("already exists a student with the same email", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        }
-      } else {
-        const added = await addStudent(formData);
-        console.log(added);
-        if (added) {
-          toast.success("Student added succesfully!", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+      const res = isEdit ? await updateStudent(formData) : await addStudent(formData);
+      console.log(res);
+      if (res.status === "success") {
+        toast.success("Student " + (isEdit ? "updated" : "added") + " succesfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        if (!isEdit) {
           handleReset({
             id: uuidv4(),
             firstName: "",
@@ -72,17 +47,30 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
             email: "",
           });
         } else {
-          toast.error("already exists!", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          setShow(false);
         }
+      } else if (res.status === "already exists") {
+        toast.error("already exists a student with the same email", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else if (res.status === "error") {
+        toast.error("error: " + res.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     });
 
