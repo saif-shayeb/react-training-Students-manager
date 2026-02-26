@@ -7,8 +7,22 @@ import Dashboard from "./components/Dashboard";
 import StudentAddForm from "./components/StudentAddForm";
 import StudentsTable from "./components/StudentsTable";
 import Notfound from "./components/Notfound";
-
+import StudentDashboard from "./components/StudentDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Login from "./components/Login";
+import { useAuth } from "./contexts/AuthContext";
+
+const DashboardWrapper = () => {
+  const { user } = useAuth();
+  if (user?.role === "admin") {
+    return <Dashboard />
+  } else if (user?.role === "student") {
+    return <StudentDashboard />
+  } else {
+    return <Login />
+  }
+};
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -17,27 +31,41 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<App />}>
           <Route element={<Layout />}>
             <Route
-              index
+              path="login"
               element={
                 <ErrorBoundary>
-                  <Dashboard />
+                  <Login />
                 </ErrorBoundary>
+              }
+            />
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <ErrorBoundary>
+                    <DashboardWrapper />
+                  </ErrorBoundary>
+                </ProtectedRoute>
               }
             />
             <Route
               path="add"
               element={
-                <ErrorBoundary>
-                  <StudentAddForm />
-                </ErrorBoundary>
+                <ProtectedRoute>
+                  <ErrorBoundary>
+                    <StudentAddForm />
+                  </ErrorBoundary>
+                </ProtectedRoute>
               }
             />
             <Route
               path="table"
               element={
-                <ErrorBoundary>
-                  <StudentsTable />
-                </ErrorBoundary>
+                <ProtectedRoute>
+                  <ErrorBoundary>
+                    <StudentsTable />
+                  </ErrorBoundary>
+                </ProtectedRoute>
               }
             />
             <Route

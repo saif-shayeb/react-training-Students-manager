@@ -1,7 +1,8 @@
 import Sidebar from "./sidebar";
 import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ children, theme, toggleTheme }) {
+export default function Layout() {
     const [open, setOpen] = useState(true);
     const toggle = () => setOpen(!open);
 
@@ -10,12 +11,10 @@ export default function Layout({ children, theme, toggleTheme }) {
             <Sidebar
                 isOpen={open}
                 toggle={toggle}
-                theme={theme}
-                toggleTheme={toggleTheme}
             />
 
             <main className="content">
-                {children}
+                <Outlet />
             </main>
         </div>
     );

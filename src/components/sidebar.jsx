@@ -6,18 +6,30 @@ import {
     FaUserGraduate,
     FaSun,
     FaMoon,
+    FaSignOutAlt
 } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import React from "react";
+import { useTheme } from "../contexts/ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
 
-export default function Sidebar({ isOpen, toggle, theme, toggleTheme }) {
+export default function Sidebar({ isOpen, toggle }) {
+    const { theme, toggleTheme } = useTheme();
+    const { user, logout } = useAuth();
+
+    const isAdmin = user?.role === "admin";
+
     const menu = [
-        { name: "Dashboard", path: "/index.html", icon: <FaHome /> },
-        { name: "Add Student", path: "/add.html", icon: <FaPlus /> },
-        { name: "Students Table", path: "/table.html", icon: <FaTable /> },
+        { name: "Dashboard", path: "/", icon: <FaHome /> },
     ];
 
-    const currentPath = window.location.pathname;
+    if (isAdmin) {
+        menu.push(
+            { name: "Add Student", path: "/add", icon: <FaPlus /> },
+            { name: "Students Table", path: "/table", icon: <FaTable /> }
+        );
+    }
 
     return (
         <motion.aside
@@ -34,19 +46,18 @@ export default function Sidebar({ isOpen, toggle, theme, toggleTheme }) {
             </div>
 
             <nav className="menu">
-                {menu.map((item, i) => {
-                    const isActive = currentPath === item.path || (item.path === "/index.html" && currentPath === "/");
-                    return (
-                        <a
-                            key={i}
-                            href={item.path}
-                            className={isActive ? "menu-item active" : "menu-item"}
-                        >
-                            <span className="icon">{item.icon}</span>
-                            {isOpen && <span>{item.name}</span>}
-                        </a>
-                    );
-                })}
+                {menu.map((item, i) => (
+                    <NavLink
+                        key={i}
+                        to={item.path}
+                        className={({ isActive }) =>
+                            isActive ? "menu-item active" : "menu-item"
+                        }
+                    >
+                        <span className="icon">{item.icon}</span>
+                        {isOpen && <span>{item.name}</span>}
+                    </NavLink>
+                ))}
             </nav>
 
             <div className="sidebar-footer">
@@ -61,6 +72,18 @@ export default function Sidebar({ isOpen, toggle, theme, toggleTheme }) {
                     {isOpen && (
                         <span>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
                     )}
+                </button>
+
+                <button
+                    onClick={logout}
+                    className="theme-toggle-btn"
+                    style={{ marginTop: "0.5rem", color: "var(--danger)" }}
+                    title="Logout"
+                >
+                    <span className="icon">
+                        <FaSignOutAlt />
+                    </span>
+                    {isOpen && <span>Logout</span>}
                 </button>
             </div>
         </motion.aside>

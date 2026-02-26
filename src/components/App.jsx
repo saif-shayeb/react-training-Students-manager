@@ -1,38 +1,23 @@
 import "../styles/App.css";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { useLocalStorageTheme } from "../hooks/localStorageTheme";
-import { ToastContainer } from "react-toastify";
 import React from "react";
+import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { StudentsProvider } from "../contexts/StudentContext";
+import { ThemeProvider } from "../contexts/ThemeContext";
+import { AuthProvider } from "../contexts/AuthContext";
 import ErrorBoundary from "./ErrorBoundary";
 
-export default function App({ children }) {
-    const [studentsList, studentsListDispatch] = useLocalStorage(
-        "studentsList",
-        [],
-    );
-
-    const [theme, setTheme] = useLocalStorageTheme("theme", "light");
-
-    React.useEffect(() => {
-        document.body.className = theme === "dark" ? "dark-theme" : "";
-    }, [theme]);
-
-    const toggleTheme = () => {
-        setTheme(theme === "light" ? "dark" : "light");
-    };
-
+export default function App() {
     return (
-        <StudentsProvider>
-            <ErrorBoundary>
-                <ToastContainer />
-                {React.Children.map(children, child => {
-                    if (React.isValidElement(child)) {
-                        return React.cloneElement(child, { theme, toggleTheme });
-                    }
-                    return child;
-                })}
-            </ErrorBoundary>
-        </StudentsProvider>
+        <AuthProvider>
+            <ThemeProvider>
+                <StudentsProvider>
+                    <ErrorBoundary>
+                        <ToastContainer />
+                        <Outlet />
+                    </ErrorBoundary>
+                </StudentsProvider>
+            </ThemeProvider>
+        </AuthProvider>
     );
 }
