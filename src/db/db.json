@@ -2,30 +2,6 @@
   "$schema": "./././node_modules/json-server/schema.json",
   "student": [
     {
-      "id": "3a063614-4242-6a77-cf82-0df746d34e06",
-      "firstName": "Michael",
-      "lastName": "Williams",
-      "birthDate": "1996-11-03",
-      "gpa": 3.21,
-      "email": "michael.williams@email.com"
-    },
-    {
-      "id": "4b174725-5353-7b88-df93-1e0857e45f17",
-      "firstName": "Sarah",
-      "lastName": "Brown",
-      "birthDate": "1997-09-18",
-      "gpa": 3.68,
-      "email": "sarah.brown@email.com"
-    },
-    {
-      "id": "5c285836-6464-8c99-ef04-2f1968f56028",
-      "firstName": "David",
-      "lastName": "Jones",
-      "birthDate": "1995-12-05",
-      "gpa": 2.95,
-      "email": "david.jones@email.com"
-    },
-    {
       "id": "6d396947-7575-9daa-f015-3f2a79f67139",
       "firstName": "Jessica",
       "lastName": "Garcia",

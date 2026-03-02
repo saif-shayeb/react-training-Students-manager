@@ -1,18 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import App from "./components/App";
+import App from "./pages/App";
 import Layout from "./components/layout";
-import Dashboard from "./components/Dashboard";
-import StudentAddForm from "./components/StudentAddForm";
-import StudentsTable from "./components/StudentsTable";
-import Notfound from "./components/Notfound";
-import StudentDashboard from "./components/StudentDashboard";
+import Dashboard from "./pages/Dashboard";
+import StudentAddForm from "./pages/StudentAddForm";
+import StudentsTable from "./pages/StudentsTable";
+import Notfound from "./pages/Notfound";
+import StudentDashboard from "./pages/StudentDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
-import Login from "./components/Login";
+import Login from "./pages/Login";
 import { useAuth } from "./contexts/AuthContext";
-import { Register } from "./components/register";
+import { Register } from "./pages/register";
 
 const DashboardWrapper = () => {
   const { user } = useAuth();

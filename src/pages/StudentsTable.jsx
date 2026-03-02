@@ -8,7 +8,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContext, useEffect, useMemo, useState } from "react";
-import Details from "..components/details";
+import Details from "../pages/details";
 import React from "react";
 import StudentAddForm from "./StudentAddForm";
 import {
@@ -26,8 +26,8 @@ export default function StudentsTable() {
   const { studentsList, error, loading } = useContext(StudentsListContext);
   const { deleteStudent } = useContext(StudentsListDispatchContext);
   const [page, setPage] = useState(1);
-  const handleDelete = (id) => {
-    const res = deleteStudent(id);
+  const handleDelete = async (id) => {
+    const res = await deleteStudent(id);
     if (res.status === "success") {
       toast.info("Student record removed.", {
         icon: <MdDeleteForever />,
