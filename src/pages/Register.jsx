@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { StudentsListDispatchContext } from "../contexts/StudentContext";
-import CustomInput from "./CustomInput";
+import CustomInput from "../components/CustomInput";
 import { userSchema } from "../validation/UserValidation";
 
 export function Register() {
