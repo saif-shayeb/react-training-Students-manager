@@ -15,7 +15,6 @@ import {
   StudentsListContext,
   StudentsListDispatchContext,
 } from "../contexts/StudentContext";
-import axios from "axios";
 
 const MotionTr = motion(Tr);
 
@@ -28,13 +27,13 @@ export default function StudentsTable() {
   const { deleteStudent } = useContext(StudentsListDispatchContext);
   const [page, setPage] = useState(1);
   const handleDelete = (id) => {
-    const deleted = deleteStudent(id);
-    if (deleted) {
+    const res = deleteStudent(id);
+    if (res.status === "success") {
       toast.info("Student record removed.", {
         icon: <MdDeleteForever />,
       });
-    } else {
-      toast.error("Failed to remove Student.", {
+    } else if (res.status === "error") {
+      toast.error("Failed to remove Student. error: " + res.message, {
         icon: <MdDeleteForever />,
       });
     }
@@ -47,11 +46,15 @@ export default function StudentsTable() {
     setSelectedStudent(student);
     setShowEdit(true);
   }
-  const filteredStudents = useMemo(() => studentsList.filter((stu) =>
-    (stu.firstName + " " + stu.lastName)
-      .toLowerCase()
-      .includes(searchquery.trim().toLowerCase()),
-  ), [studentsList, searchquery]);
+  const filteredStudents = useMemo(
+    () =>
+      studentsList.filter((stu) =>
+        (stu.firstName + " " + stu.lastName)
+          .toLowerCase()
+          .includes(searchquery.trim().toLowerCase()),
+      ),
+    [studentsList, searchquery],
+  );
 
   const totalPages = Math.ceil(filteredStudents.length / 10);
 

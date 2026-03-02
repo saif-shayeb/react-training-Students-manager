@@ -44,10 +44,9 @@ export function StudentsProvider({ children }) {
         toast.error(
           <>
             Failed to fetch students
-            <br />
-            ({e.message})
+            <br />({e.message})
           </>,
-          { toastId: "fetch-error" }
+          { toastId: "fetch-error" },
         );
       } finally {
         setLoading(false);
@@ -60,7 +59,11 @@ export function StudentsProvider({ children }) {
   async function addStudent(student) {
     const exists = studentsList.some((s) => s.email === student.email);
 
-    if (exists) return { status: "already exists", message: "already exists a student with the same email" };
+    if (exists)
+      return {
+        status: "already exists",
+        message: "already exists a student with the same email",
+      };
 
     try {
       setLoading(true);
@@ -78,7 +81,7 @@ export function StudentsProvider({ children }) {
   async function deleteStudent(id) {
     try {
       setLoading(true);
-      await axios.delete(`${API_URL}/${id}`);
+      const res = await axios.delete(`${API_URL}/${id}`);
       dispatch({ type: "DELETE_STUDENT", payload: id });
       return { status: "success", message: res.statusText };
     } catch (e) {

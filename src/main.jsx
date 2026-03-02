@@ -12,15 +12,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./components/Login";
 import { useAuth } from "./contexts/AuthContext";
+import { Register } from "./components/register";
 
 const DashboardWrapper = () => {
   const { user } = useAuth();
   if (user?.role === "admin") {
-    return <Dashboard />
+    return <Dashboard />;
   } else if (user?.role === "student") {
-    return <StudentDashboard />
-  } else {
-    return <Login />
+    return <StudentDashboard />;
   }
 };
 
@@ -66,6 +65,14 @@ createRoot(document.getElementById("root")).render(
                     <StudentsTable />
                   </ErrorBoundary>
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="register"
+              element={
+                <ErrorBoundary>
+                  <Register />
+                </ErrorBoundary>
               }
             />
             <Route

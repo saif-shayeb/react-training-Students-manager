@@ -2,22 +2,6 @@
   "$schema": "./././node_modules/json-server/schema.json",
   "student": [
     {
-      "id": "1ed41492-2020-4855-ae60-8bd524b12ef4",
-      "firstName": "John",
-      "lastName": "Smith",
-      "birthDate": "1995-03-15",
-      "gpa": 3.75,
-      "email": "john.smith@email.com"
-    },
-    {
-      "id": "2fe52503-3131-5966-bf71-9ce635c23df5",
-      "firstName": "Emily",
-      "lastName": "Johnson",
-      "birthDate": "1998-07-22",
-      "gpa": 3.92,
-      "email": "emily.johnson@email.com"
-    },
-    {
       "id": "3a063614-4242-6a77-cf82-0df746d34e06",
       "firstName": "Michael",
       "lastName": "Williams",
@@ -735,6 +719,15 @@
       "lastName": "Shayeb",
       "birthDate": "2026-02-23",
       "gpa": 4,
+      "email": "sshayep@gmail.com"
+    }
+  ],
+  "user": [
+    {
+      "id": "",
+      "firstName": "saif",
+      "lastName": "Shayeb",
+      "birthDate": "2026-02-23",
       "email": "sshayep@gmail.com"
     }
   ]
