@@ -7,7 +7,8 @@ function CustomInput({
   placeholder,
   placeHolder,
   id,
-  required,
+  required = false,
+  value,
 }) {
   const ph = placeholder ?? placeHolder ?? "";
   return (

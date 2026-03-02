@@ -5,80 +5,67 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { StudentsListDispatchContext } from "../contexts/StudentContext";
-import useForm from "../hooks/useForm";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { userSchema } from "../validation/UserValidation";
+import { InlineError } from "../components/InlineError";
 
 function StudentAddForm({ studentEdit, isEdit, setShow }) {
   const { addStudent, updateStudent } = useContext(StudentsListDispatchContext);
 
-  const initialValues = isEdit
-    ? studentEdit
-    : {
-      id: uuidv4(),
-      firstName: "",
-      lastName: "",
-      birthDate: "",
-      gpa: 0,
-      email: "",
-    };
-
-  const { values, setValues, handleChange, handleSubmit, handleReset, isLoading } =
-    useForm(initialValues, async (formData) => {
-      const res = isEdit ? await updateStudent(formData) : await addStudent(formData);
-      console.log(res);
-      if (res.status === "success") {
-        toast.success("Student " + (isEdit ? "updated" : "added") + " succesfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-        if (!isEdit) {
-          handleReset({
-            id: uuidv4(),
-            firstName: "",
-            lastName: "",
-            birthDate: "",
-            gpa: 0,
-            email: "",
-          });
-        } else {
-          setShow(false);
-        }
-      } else if (res.status === "already exists") {
-        toast.error("already exists a student with the same email", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else if (res.status === "error") {
-        toast.error("error: " + res.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-    });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(userSchema),
+    defaultValues: isEdit
+      ? { ...studentEdit, password2: studentEdit.password }
+      : {
+        id: uuidv4(),
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        gpa: 0,
+        email: "",
+        gender: "male",
+        password: "",
+        password2: "",
+        type: "student",
+      },
+  });
 
   useEffect(() => {
     if (isEdit && studentEdit) {
-      setValues(studentEdit);
+      reset({ ...studentEdit, password2: studentEdit.password });
     }
-  }, [studentEdit, isEdit, setValues]);
+  }, [studentEdit, isEdit, reset]);
+
+  const onSubmit = async (data) => {
+    const res = isEdit ? await updateStudent(data) : await addStudent(data);
+    if (res.status === "success") {
+      toast.success("Student " + (isEdit ? "updated" : "added") + " successfully!");
+      if (!isEdit) {
+        reset({
+          id: uuidv4(),
+          firstName: "",
+          lastName: "",
+          birthDate: "",
+          gpa: 0,
+          email: "",
+          gender: "male",
+          password: "",
+          password2: "",
+          type: "student",
+        });
+      } else {
+        setShow(false);
+      }
+    } else {
+      toast.error(res.message || "An error occurred");
+    }
+  };
 
   return (
     <div className="form-container">
@@ -92,72 +79,93 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
             : "Enter student information below to register them in the system."}
         </p>
 
-        <form className="student-form" onSubmit={handleSubmit}>
+        <form className="student-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-grid">
             <div className="form-group">
               <label htmlFor="first-name">First Name</label>
               <input
+                {...register("firstName")}
                 type="text"
-                name="firstName"
                 placeholder="John"
-                value={values.firstName}
-                onChange={handleChange}
                 id="first-name"
-                required
               />
+              {errors.firstName && <InlineError message={errors.firstName.message} />}
             </div>
 
             <div className="form-group">
               <label htmlFor="last-name">Last Name</label>
               <input
+                {...register("lastName")}
                 type="text"
-                name="lastName"
                 placeholder="Doe"
-                value={values.lastName}
-                onChange={handleChange}
                 id="last-name"
-                required
               />
+              {errors.lastName && <InlineError message={errors.lastName.message} />}
             </div>
 
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
               <input
+                {...register("email")}
                 type="email"
-                name="email"
                 placeholder="john.doe@example.com"
-                value={values.email}
-                onChange={handleChange}
                 id="email"
-                required
               />
+              {errors.email && <InlineError message={errors.email.message} />}
             </div>
 
             <div className="form-group">
               <label htmlFor="bDate">Date of Birth</label>
               <input
+                {...register("birthDate")}
                 type="date"
-                name="birthDate"
-                value={values.birthDate}
-                onChange={handleChange}
                 id="bDate"
-                required
               />
+              {errors.birthDate && <InlineError message={errors.birthDate.message} />}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="gender">Gender</label>
+              <select {...register("gender")} id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              {errors.gender && <InlineError message={errors.gender.message} />}
             </div>
 
             <div className="form-group">
               <label htmlFor="gpa">GPA (0.00 - 4.00)</label>
               <input
+                {...register("gpa", { valueAsNumber: true })}
                 type="number"
-                name="gpa"
-                value={values.gpa}
-                onChange={handleChange}
                 id="gpa"
                 min={0}
                 max={4}
                 step={0.01}
-                required
               />
+              {errors.gpa && <InlineError message={errors.gpa.message} />}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                {...register("password")}
+                type="password"
+                id="password"
+                placeholder="******"
+              />
+              {errors.password && <InlineError message={errors.password.message} />}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password2">Confirm Password</label>
+              <input
+                {...register("password2")}
+                type="password"
+                id="password2"
+                placeholder="******"
+              />
+              {errors.password2 && <InlineError message={errors.password2.message} />}
             </div>
           </div>
 
@@ -171,8 +179,8 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
                 Cancel
               </button>
             )}
-            <button type="submit" className="submit-btn" disabled={isLoading}>
-              {isLoading ? (
+            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+              {isSubmitting ? (
                 <div className="btn-content">
                   <AiOutlineLoading3Quarters className="spinner" />
                   <span>{isEdit ? "Updating..." : "Adding..."}</span>

@@ -12,13 +12,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./pages/Login";
 import { useAuth } from "./contexts/AuthContext";
-import { Register } from "./pages/register";
+import { Register } from "./pages/Register";
 
 const DashboardWrapper = () => {
   const { user } = useAuth();
-  if (user?.role === "admin") {
+  if (user?.type === "admin") {
     return <Dashboard />;
-  } else if (user?.role === "student") {
+  } else if (user?.type === "student") {
     return <StudentDashboard />;
   }
 };
@@ -50,7 +50,7 @@ createRoot(document.getElementById("root")).render(
             <Route
               path="add"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute adminOnly={true}>
                   <ErrorBoundary>
                     <StudentAddForm />
                   </ErrorBoundary>
@@ -60,7 +60,7 @@ createRoot(document.getElementById("root")).render(
             <Route
               path="table"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute adminOnly={true}>
                   <ErrorBoundary>
                     <StudentsTable />
                   </ErrorBoundary>

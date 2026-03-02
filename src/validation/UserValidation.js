@@ -1,11 +1,17 @@
 import * as yup from "yup";
 export const userSchema = yup.object().shape({
-  firstName: yup.string().required("this field is required"),
-  lastName: yup.string().required("this field is required"),
-  email: yup.string().email().required("this field is required"),
-  bDate: yup.date().required("this field is required"),
-  Pass: yup.string().min(6).max(150).required("this field is required"),
-  passc: yup.string().oneOf([yup.ref("pass"), "passwords must match"]),
-  gender: yup.string().equals(["female", "male"]),
-  type: yup.string().equals(["admin", "student"]),
+  firstName: yup.string().required("first name is required"),
+  lastName: yup.string().required("last name is required"),
+  email: yup.string().email().required("email is required"),
+  birthDate: yup
+    .string()
+    .required("birth date is required"),
+
+  type: yup.string().required("user type is required"),
+  gender: yup.string().required("gender is required"),
+  password: yup.string().min(6, "password must be at least 6 characters").required("password is required"),
+  password2: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "passwords must match")
+    .required("confirm password is required"),
 });

@@ -17,7 +17,7 @@ export default function Sidebar({ isOpen, toggle }) {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
 
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.type === "admin";
 
   const menu = [{ name: "Dashboard", path: "/", icon: <FaHome /> }];
 

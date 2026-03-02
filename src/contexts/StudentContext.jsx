@@ -1,11 +1,10 @@
 import { createContext, useReducer, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const StudentsListContext = createContext(null);
 export const StudentsListDispatchContext = createContext(null);
-
-const API_URL = "http://localhost:3000/student";
 
 function studentsReducer(state, action) {
   switch (action.type) {
@@ -37,8 +36,16 @@ export function StudentsProvider({ children }) {
     async function fetchData() {
       try {
         setLoading(true);
-        const res = await axios.get(API_URL);
-        dispatch({ type: "SET_STUDENTS", payload: res.data });
+        const res = await axios.get(API_URL + "/student");
+        const res2 = await axios.get(API_URL + "/user?type=student");
+        // merge the two resources into a single object per student
+        const studentsWithUserData = res.data.map((student) => {
+          const userData = res2.data.find(
+            (user) => user.id === student.id,
+          );
+          return { ...student, ...userData };
+        });
+        dispatch({ type: "SET_STUDENTS", payload: studentsWithUserData });
       } catch (e) {
         setError(e);
         toast.error(
@@ -56,8 +63,8 @@ export function StudentsProvider({ children }) {
     fetchData();
   }, []);
 
-  async function addStudent(student) {
-    const exists = studentsList.some((s) => s.email === student.email);
+  async function addStudent(studentUserData) {
+    const exists = studentsList.some((s) => s.email === studentUserData.email);
 
     if (exists)
       return {
@@ -67,8 +74,33 @@ export function StudentsProvider({ children }) {
 
     try {
       setLoading(true);
-      const res = await axios.post(API_URL, student);
-      dispatch({ type: "ADD_STUDENT", payload: res.data });
+
+      // Check for unique email in user collection
+      const checkUser = await axios.get(`${API_URL}/user?email=${studentUserData.email}`);
+      if (checkUser.data.length > 0) {
+        setLoading(false);
+        return { status: "error", message: "Email already exists" };
+      }
+
+      const student = {
+        id: studentUserData.id,
+        gpa: studentUserData.gpa,
+      };
+      const user = {
+        id: studentUserData.id,
+        email: studentUserData.email,
+        firstName: studentUserData.firstName,
+        lastName: studentUserData.lastName,
+        birthDate: studentUserData.birthDate,
+        gender: studentUserData.gender,
+        password: studentUserData.password,
+        type: "student",
+      };
+      const res = await axios.post(API_URL + "/student", student);
+      const res2 = await axios.post(API_URL + "/user", user);
+
+      // merge results so callers have full object
+      dispatch({ type: "ADD_STUDENT", payload: { ...res.data, ...res2.data } });
       return { status: "success", message: res.statusText };
     } catch (e) {
       setError(e);
@@ -81,9 +113,11 @@ export function StudentsProvider({ children }) {
   async function deleteStudent(id) {
     try {
       setLoading(true);
-      const res = await axios.delete(`${API_URL}/${id}`);
+      // remove from both collections
+      await axios.delete(`${API_URL}/student/${id}`);
+      await axios.delete(`${API_URL}/user/${id}`);
       dispatch({ type: "DELETE_STUDENT", payload: id });
-      return { status: "success", message: res.statusText };
+      return { status: "success", message: "deleted" };
     } catch (e) {
       setError(e);
       return { status: "error", message: e.message };
@@ -93,19 +127,47 @@ export function StudentsProvider({ children }) {
   }
 
   async function updateStudent(updatedStudent) {
-    const newList = studentsList.filter((s) => s.id != updatedStudent.id);
+    const newList = studentsList.filter((s) => s.id !== updatedStudent.id);
     const duplicate = newList.some((s) => s.email === updatedStudent.email);
     if (duplicate) {
       return { status: "already exists", message: "already exists" };
     }
     try {
       setLoading(true);
-      const res = await axios.put(
-        `${API_URL}/${updatedStudent.id}`,
-        updatedStudent,
+
+      // Check for unique email if it was changed
+      const oldStudent = studentsList.find(s => s.id === updatedStudent.id);
+      if (oldStudent && oldStudent.email !== updatedStudent.email) {
+        const checkUser = await axios.get(`${API_URL}/user?email=${updatedStudent.email}`);
+        if (checkUser.data.length > 0) {
+          setLoading(false);
+          return { status: "error", message: "Email already exists" };
+        }
+      }
+
+      const studentPayload = {
+        gpa: updatedStudent.gpa,
+      };
+      const userPayload = {
+        email: updatedStudent.email,
+        firstName: updatedStudent.firstName,
+        lastName: updatedStudent.lastName,
+        birthDate: updatedStudent.birthDate,
+        gender: updatedStudent.gender,
+        password: updatedStudent.password,
+        type: "student",
+      };
+      const resStud = await axios.put(
+        `${API_URL}/student/${updatedStudent.id}`,
+        studentPayload,
       );
-      dispatch({ type: "UPDATE_STUDENT", payload: res.data });
-      return { status: "success", message: res.statusText };
+      const resUser = await axios.put(
+        `${API_URL}/user/${updatedStudent.id}`,
+        userPayload,
+      );
+      const merged = { ...resStud.data, ...resUser.data };
+      dispatch({ type: "UPDATE_STUDENT", payload: merged });
+      return { status: "success", message: resStud.statusText };
     } catch (e) {
       setError(e);
       return { status: "error", message: e.message };
