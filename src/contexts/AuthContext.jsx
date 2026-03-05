@@ -4,17 +4,24 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useLocalStorage("isAuthenticated", false);
     const [user, setUser] = useLocalStorage("user", null);
+    const [token, setToken] = useState(localStorage.getItem("access_token"));
 
-    const login = (userData) => {
-        setIsAuthenticated(true);
+    const isAuthenticated = !!token;
+
+    const login = (userData, token) => {
         setUser(userData);
+        if (token) {
+            localStorage.setItem("access_token", token);
+            setToken(token);
+        }
     };
 
     const logout = () => {
-        setIsAuthenticated(false);
         setUser(null);
+        localStorage.removeItem("access_token");
+        setToken(null);
+        localStorage.removeItem("user");
     };
 
     return (

@@ -66,6 +66,11 @@
   gap: 0.75rem;
 }
 
+.email-column {
+  word-break: break-all;
+  min-width: 150px;
+}
+
 .delete-btn,
 .edit-btn {
   display: flex;

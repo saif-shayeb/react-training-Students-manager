@@ -34,7 +34,7 @@ export default function StudentDashboard() {
                         </div>
                         <div className="info-item">
                             <label>Birth Date</label>
-                            <h3>{studentData.birthDate}</h3>
+                            <h3>{studentData.birthDate?.split("T")[0]}</h3>
                         </div>
                         <div className="info-item">
                             <label>Current GPA</label>

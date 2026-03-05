@@ -2,13 +2,14 @@ import { useContext, useEffect } from "react";
 import "../styles/StudentAddForm.css";
 import { toast } from "react-toastify";
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { StudentsListDispatchContext } from "../contexts/StudentContext";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "../validation/UserValidation";
 import { InlineError } from "../components/InlineError";
+import CustomInput from "../components/CustomInput";
+import CustomBtn from "../components/CustomBtn";
 
 function StudentAddForm({ studentEdit, isEdit, setShow }) {
   const { addStudent, updateStudent } = useContext(StudentsListDispatchContext);
@@ -23,7 +24,6 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
     defaultValues: isEdit
       ? { ...studentEdit, password2: studentEdit.password }
       : {
-        id: uuidv4(),
         firstName: "",
         lastName: "",
         birthDate: "",
@@ -38,20 +38,23 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
 
   useEffect(() => {
     if (isEdit && studentEdit) {
-      reset({ ...studentEdit, password2: studentEdit.password });
+      reset({ ...studentEdit, password2: studentEdit.password, bDate: studentEdit.birthDate });
     }
   }, [studentEdit, isEdit, reset]);
 
   const onSubmit = async (data) => {
-    const res = isEdit ? await updateStudent(data) : await addStudent(data);
+    console.log(data);
+    const formattedData = { ...data, birthDate: data.bDate };
+    const res = isEdit ? await updateStudent(formattedData) : await addStudent(formattedData);
     if (res.status === "success") {
-      toast.success("Student " + (isEdit ? "updated" : "added") + " successfully!");
+      toast.success(
+        "Student " + (isEdit ? "updated" : "added") + " successfully!",
+      );
       if (!isEdit) {
         reset({
-          id: uuidv4(),
           firstName: "",
           lastName: "",
-          birthDate: "",
+          bDate: "",
           gpa: 0,
           email: "",
           gender: "male",
@@ -83,30 +86,37 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
           <div className="form-grid">
             <div className="form-group">
               <label htmlFor="first-name">First Name</label>
-              <input
-                {...register("firstName")}
+              <CustomInput
+                register={register}
+                name="firstName"
                 type="text"
                 placeholder="John"
                 id="first-name"
               />
-              {errors.firstName && <InlineError message={errors.firstName.message} />}
+              {errors.firstName && (
+                <InlineError message={errors.firstName.message} />
+              )}
             </div>
 
             <div className="form-group">
               <label htmlFor="last-name">Last Name</label>
-              <input
-                {...register("lastName")}
+              <CustomInput
+                register={register}
+                name="lastName"
                 type="text"
                 placeholder="Doe"
                 id="last-name"
               />
-              {errors.lastName && <InlineError message={errors.lastName.message} />}
+              {errors.lastName && (
+                <InlineError message={errors.lastName.message} />
+              )}
             </div>
 
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
-              <input
-                {...register("email")}
+              <CustomInput
+                register={register}
+                name="email"
                 type="email"
                 placeholder="john.doe@example.com"
                 id="email"
@@ -116,12 +126,15 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
 
             <div className="form-group">
               <label htmlFor="bDate">Date of Birth</label>
-              <input
-                {...register("birthDate")}
+              <CustomInput
+                register={register}
+                name="bDate"
                 type="date"
                 id="bDate"
               />
-              {errors.birthDate && <InlineError message={errors.birthDate.message} />}
+              {errors.bDate && (
+                <InlineError message={errors.bDate.message} />
+              )}
             </div>
 
             <div className="form-group">
@@ -135,8 +148,10 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
 
             <div className="form-group">
               <label htmlFor="gpa">GPA (0.00 - 4.00)</label>
-              <input
-                {...register("gpa", { valueAsNumber: true })}
+              <CustomInput
+                register={register}
+                name="gpa"
+                registerOptions={{ valueAsNumber: true }}
                 type="number"
                 id="gpa"
                 min={0}
@@ -148,38 +163,44 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
 
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input
-                {...register("password")}
+              <CustomInput
+                register={register}
+                name="password"
                 type="password"
                 id="password"
                 placeholder="******"
               />
-              {errors.password && <InlineError message={errors.password.message} />}
+              {errors.password && (
+                <InlineError message={errors.password.message} />
+              )}
             </div>
 
             <div className="form-group">
               <label htmlFor="password2">Confirm Password</label>
-              <input
-                {...register("password2")}
+              <CustomInput
+                register={register}
+                name="password2"
                 type="password"
                 id="password2"
                 placeholder="******"
               />
-              {errors.password2 && <InlineError message={errors.password2.message} />}
+              {errors.password2 && (
+                <InlineError message={errors.password2.message} />
+              )}
             </div>
           </div>
 
           <div className="form-actions">
             {isEdit && (
-              <button
+              <CustomBtn
                 type="button"
-                className="cancelbtn"
                 onClick={() => setShow(false)}
+                danger={true}
               >
                 Cancel
-              </button>
+              </CustomBtn>
             )}
-            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            <CustomBtn type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <div className="btn-content">
                   <AiOutlineLoading3Quarters className="spinner" />
@@ -188,7 +209,7 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
               ) : (
                 <>{isEdit ? "Update Student" : "Add Student"}</>
               )}
-            </button>
+            </CustomBtn>
           </div>
         </form>
       </div>

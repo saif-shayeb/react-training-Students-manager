@@ -362,30 +362,16 @@ h2 {
   letter-spacing: 0.1em;
   margin-top: 1rem;
 }
+
 .details-filled div {
   display: flex;
   flex-direction: row;
   font-size: 1.5rem;
   justify-content: space-between;
 }
+
 .details-filled h3 {
   font-size: 1em;
   padding-bottom: 15px;
-}
-.back-btn {
-  background: var(--primary);
-  color: white;
-  padding: 0.875rem 2rem;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
-}
-.back-btn:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+  word-break: break-all;
 }

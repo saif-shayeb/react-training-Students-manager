@@ -12,20 +12,20 @@
       "type": "admin"
     },
     {
+      "id": "653da070-4c89-4225-bb6a-670df6c294cd",
       "email": "sshayep22@gmail.com",
       "firstName": "Saif",
       "lastName": "Shayeb",
-      "birthDate": "2026-03-02",
+      "birthDate": "2026-03-02T22:00:00.000Z",
       "gender": "male",
       "password": "123456",
-      "type": "student",
-      "id": "cfe3b0d2-fcc7-44be-bf9f-b286c0d11f1b"
+      "type": "student"
     }
   ],
   "student": [
     {
-      "gpa": 0,
-      "id": "cfe3b0d2-fcc7-44be-bf9f-b286c0d11f1b"
+      "id": "653da070-4c89-4225-bb6a-670df6c294cd",
+      "gpa": 3.57
     }
   ]
 }

@@ -1,5 +1,6 @@
-import React from "react";
 import { FaTable, FaUserGraduate } from "react-icons/fa";
+import CustomBtn from "../components/CustomBtn";
+
 function Details({ student, setShowing }) {
   return (
     <div className="details-container" data-testid="details-container">
@@ -16,7 +17,7 @@ function Details({ student, setShowing }) {
             </div>
             <div>
               <label htmlFor="birth">Birth-Date</label>
-              <h3 id="birth">{student.birthDate}</h3>
+              <h3 id="birth">{String(student.birthDate || "").split("T")[0]}</h3>
             </div>
             <div>
               <label htmlFor="email">email</label>
@@ -38,9 +39,7 @@ function Details({ student, setShowing }) {
             <div className="coming-soon-badge">Feature Expanding Soon</div>
           </div>
         )}
-        <button onClick={() => setShowing(false)} className="back-btn">
-          go back
-        </button>
+        <CustomBtn onClick={() => setShowing(false)}>go back</CustomBtn>
       </div>
     </div>
   );

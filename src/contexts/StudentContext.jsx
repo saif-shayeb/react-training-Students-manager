@@ -1,7 +1,8 @@
 import { createContext, useReducer, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { toast } from "react-toastify";
-const API_URL = import.meta.env.VITE_API_URL;
+import { useAuth } from "./AuthContext";
+import { useLocation } from "react-router-dom";
 
 export const StudentsListContext = createContext(null);
 export const StudentsListDispatchContext = createContext(null);
@@ -28,31 +29,40 @@ function studentsReducer(state, action) {
 }
 
 export function StudentsProvider({ children }) {
+  const { isAuthenticated } = useAuth();
   const [studentsList, dispatch] = useReducer(studentsReducer, []);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    setError(null);
+  }, [location.pathname]);
 
   useEffect(() => {
     async function fetchData() {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
       try {
         setLoading(true);
-        const res = await axios.get(API_URL + "/student");
-        const res2 = await axios.get(API_URL + "/user?type=student");
-        // merge the two resources into a single object per student
-        const studentsWithUserData = res.data.map((student) => {
-          const userData = res2.data.find(
-            (user) => user.id === student.id,
-          );
-          return { ...student, ...userData };
-        });
-        dispatch({ type: "SET_STUDENTS", payload: studentsWithUserData });
+        const res = await api.get("/students/");
+        const mapped = res.data.map(s => ({
+          ...s,
+          id: s.id, // Explicitly ensure id is users.id
+          firstName: s.first_name,
+          lastName: s.last_name,
+          birthDate: s.birth_date
+        }));
+        dispatch({ type: "SET_STUDENTS", payload: mapped });
       } catch (e) {
         setError(e);
         toast.error(
-          <>
+          <div>
             Failed to fetch students
             <br />({e.message})
-          </>,
+          </div>,
           { toastId: "fetch-error" },
         );
       } finally {
@@ -61,7 +71,7 @@ export function StudentsProvider({ children }) {
     }
 
     fetchData();
-  }, []);
+  }, [isAuthenticated]);
 
   async function addStudent(studentUserData) {
     const exists = studentsList.some((s) => s.email === studentUserData.email);
@@ -75,36 +85,29 @@ export function StudentsProvider({ children }) {
     try {
       setLoading(true);
 
-      // Check for unique email in user collection
-      const checkUser = await axios.get(`${API_URL}/user?email=${studentUserData.email}`);
-      if (checkUser.data.length > 0) {
-        setLoading(false);
-        return { status: "error", message: "Email already exists" };
-      }
-
-      const student = {
-        id: studentUserData.id,
-        gpa: studentUserData.gpa,
-      };
-      const user = {
-        id: studentUserData.id,
+      const payload = {
+        first_name: studentUserData.firstName,
+        last_name: studentUserData.lastName,
         email: studentUserData.email,
-        firstName: studentUserData.firstName,
-        lastName: studentUserData.lastName,
-        birthDate: studentUserData.birthDate,
-        gender: studentUserData.gender,
         password: studentUserData.password,
         type: "student",
+        gender: studentUserData.gender,
+        birth_date: studentUserData.birthDate,
+        gpa: studentUserData.gpa
       };
-      const res = await axios.post(API_URL + "/student", student);
-      const res2 = await axios.post(API_URL + "/user", user);
 
-      // merge results so callers have full object
-      dispatch({ type: "ADD_STUDENT", payload: { ...res.data, ...res2.data } });
-      return { status: "success", message: res.statusText };
+      const res = await api.post("/students/", payload);
+
+      const newStudent = {
+        ...studentUserData,
+        id: res.data.user_id // res.data is from success_response structure
+      };
+
+      dispatch({ type: "ADD_STUDENT", payload: newStudent });
+      return { status: "success", message: "Student added successfully" };
     } catch (e) {
       setError(e);
-      return { status: "error", message: e.message };
+      return { status: "error", message: e.response?.data?.error || e.message };
     } finally {
       setLoading(false);
     }
@@ -113,14 +116,12 @@ export function StudentsProvider({ children }) {
   async function deleteStudent(id) {
     try {
       setLoading(true);
-      // remove from both collections
-      await axios.delete(`${API_URL}/student/${id}`);
-      await axios.delete(`${API_URL}/user/${id}`);
+      await api.delete(`/students/${id}`);
       dispatch({ type: "DELETE_STUDENT", payload: id });
       return { status: "success", message: "deleted" };
     } catch (e) {
       setError(e);
-      return { status: "error", message: e.message };
+      return { status: "error", message: e.response?.data?.error || e.message };
     } finally {
       setLoading(false);
     }
@@ -135,42 +136,23 @@ export function StudentsProvider({ children }) {
     try {
       setLoading(true);
 
-      // Check for unique email if it was changed
-      const oldStudent = studentsList.find(s => s.id === updatedStudent.id);
-      if (oldStudent && oldStudent.email !== updatedStudent.email) {
-        const checkUser = await axios.get(`${API_URL}/user?email=${updatedStudent.email}`);
-        if (checkUser.data.length > 0) {
-          setLoading(false);
-          return { status: "error", message: "Email already exists" };
-        }
-      }
-
-      const studentPayload = {
-        gpa: updatedStudent.gpa,
-      };
-      const userPayload = {
+      const payload = {
+        first_name: updatedStudent.firstName,
+        last_name: updatedStudent.lastName,
         email: updatedStudent.email,
-        firstName: updatedStudent.firstName,
-        lastName: updatedStudent.lastName,
-        birthDate: updatedStudent.birthDate,
-        gender: updatedStudent.gender,
         password: updatedStudent.password,
-        type: "student",
+        gender: updatedStudent.gender,
+        birth_date: updatedStudent.birthDate,
+        gpa: updatedStudent.gpa
       };
-      const resStud = await axios.put(
-        `${API_URL}/student/${updatedStudent.id}`,
-        studentPayload,
-      );
-      const resUser = await axios.put(
-        `${API_URL}/user/${updatedStudent.id}`,
-        userPayload,
-      );
-      const merged = { ...resStud.data, ...resUser.data };
-      dispatch({ type: "UPDATE_STUDENT", payload: merged });
-      return { status: "success", message: resStud.statusText };
+
+      await api.put(`/students/${updatedStudent.id}`, payload);
+
+      dispatch({ type: "UPDATE_STUDENT", payload: updatedStudent });
+      return { status: "success", message: "Student updated successfully" };
     } catch (e) {
       setError(e);
-      return { status: "error", message: e.message };
+      return { status: "error", message: e.response?.data?.error || e.message };
     } finally {
       setLoading(false);
     }

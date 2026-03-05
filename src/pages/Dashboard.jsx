@@ -1,8 +1,36 @@
 import { FaPlus, FaTable, FaUserGraduate } from "react-icons/fa";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import React, { useContext } from "react";
 import { StudentsListContext } from "../contexts/StudentContext";
-export default function Dashboard({}) {
-  const { studentsList } = useContext(StudentsListContext);
+
+export default function Dashboard() {
+  const { studentsList, loading, error } = useContext(StudentsListContext);
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <h2 className="dashboard-title">Dashboard Overview</h2>
+        <div className="empty-state">
+          <div className="loading-content">
+            <AiOutlineLoading3Quarters className="spinner" />
+            <p>Loading dashboard data...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <h2 className="dashboard-title">Dashboard Overview</h2>
+        <div className="empty-state" style={{ color: "var(--danger)" }}>
+          <p>Error loading dashboard: {error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
   const stats = [
     {
       label: "Total Students",
@@ -14,9 +42,9 @@ export default function Dashboard({}) {
       label: "Average GPA",
       value: studentsList.length
         ? (
-            studentsList.reduce((acc, s) => acc + parseFloat(s.gpa), 0) /
-            studentsList.length
-          ).toFixed(2)
+          studentsList.reduce((acc, s) => acc + parseFloat(s.gpa), 0) /
+          studentsList.length
+        ).toFixed(2)
         : "0.00",
       icon: <FaTable />,
       color: "var(--secondary)",

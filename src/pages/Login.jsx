@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import CustomBtn from "../components/CustomBtn";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -16,29 +17,35 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const trimmedEmail = email.trim();
     try {
-      console.log("Searching for user with email:", trimmedEmail);
-      const res = await axios.get(`${API_URL}/user`, {
-        params: {
-          email: trimmedEmail
-        }
+      const res = await axios.post(`${API_URL}/auth/login`, {
+        email: email.trim(),
+        password
       });
 
-      console.log("Users found:", res.data);
+      const { access_token } = res.data;
+      if (access_token) {
+        const base64Url = access_token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
 
-      const foundUser = res.data.find(u => u.password === password);
+        const payload = JSON.parse(jsonPayload);
+        const userData = {
+          id: payload.sub,
+          type: payload.type,
+          email: email.trim()
+        };
 
-      if (foundUser) {
-        login(foundUser);
-        toast.success(`Login successful as ${foundUser.type}!`);
+        login(userData, access_token);
+        toast.success(`Login successful!`);
         navigate("/");
-      } else {
-        toast.error("Invalid email or password");
       }
     } catch (error) {
       console.error("Login Error:", error);
-      toast.error("Login failed: " + error.message);
+      const errorMessage = error.response?.data?.error || error.message;
+      toast.error("Login failed: " + errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -60,7 +67,6 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="email@example.com"
-              className="form-control"
               style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)", background: "var(--bg-surface)", color: "var(--text-main)" }}
             />
           </div>
@@ -73,19 +79,18 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="******"
-              className="form-control"
               style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)", background: "var(--bg-surface)", color: "var(--text-main)" }}
             />
           </div>
 
-          <button
+          <CustomBtn
             type="submit"
-            className="btn btn-primary"
             disabled={isLoading}
-            style={{ width: "100%", padding: "0.75rem", background: "var(--primary)", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", marginBottom: "1rem" }}
+            width="100%"
+            style={{ background: "var(--primary)" }}
           >
             {isLoading ? "Logging in..." : "Login"}
-          </button>
+          </CustomBtn>
         </form>
 
         <div style={{ textAlign: "center", borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>

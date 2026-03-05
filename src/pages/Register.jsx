@@ -4,11 +4,12 @@ import CustomInput from "../components/CustomInput";
 import { userSchema } from "../validation/UserValidation";
 import { InlineError } from "../components/InlineError";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
+import api from "../services/api";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import CustomBtn from "../components/CustomBtn";
+
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -30,39 +31,24 @@ export function Register() {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const id = uuidv4();
-      const userData = {
-        id,
-        firstName: data.firstName,
-        lastName: data.lastName,
+      const payload = {
+        first_name: data.firstName,
+        last_name: data.lastName,
         email: data.email,
-        birthDate: data.birthDate,
-        gender: data.gender,
+        password: data.password,
         type: data.type,
-        password: data.password
+        gender: data.gender,
+        birth_date: data.bDate
       };
 
-      const checkUser = await axios.get(`${API_URL}/user?email=${data.email}`);
-      if (checkUser.data.length > 0) {
-        toast.error("Email already exists. Please use a different email.");
-        setIsLoading(false);
-        return;
-      }
-
-      await axios.post(`${API_URL}/user`, userData);
-
-      if (data.type === "student") {
-        const studentData = {
-          id,
-          gpa: 0
-        };
-        await axios.post(`${API_URL}/student`, studentData);
-      }
+      await api.post("/auth/register", payload);
 
       toast.success("Registration successful!");
       navigate("/login");
     } catch (error) {
-      toast.error("Registration failed: " + error.message);
+      console.error("Registration Error:", error);
+      const errorMessage = error.response?.data?.error || error.message;
+      toast.error("Registration failed: " + errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -120,10 +106,10 @@ export function Register() {
               <CustomInput
                 register={register}
                 type="date"
-                name="birthDate"
+                name="bDate"
                 id="birthDate"
               />
-              {errors.birthDate && <InlineError message={errors.birthDate.message} />}
+              {errors.bDate && <InlineError message={errors.bDate.message} />}
             </div>
 
             <div className="form-group">
@@ -176,7 +162,7 @@ export function Register() {
           </div>
 
           <div className="form-actions" style={{ marginTop: "1.5rem", textAlign: "center" }}>
-            <button type="submit" className="submit-btn" disabled={isLoading} style={{ width: "100%", padding: "0.75rem", background: "var(--secondary)", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", marginBottom: "1rem" }}>
+            <CustomBtn type="submit" disabled={isLoading} width="100%" style={{ background: "var(--secondary)" }} >
               {isLoading ? (
                 <div className="btn-content">
                   <AiOutlineLoading3Quarters className="spinner" />
@@ -185,7 +171,7 @@ export function Register() {
               ) : (
                 "Register Account"
               )}
-            </button>
+            </CustomBtn>
           </div>
         </form>
 
