@@ -8,7 +8,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContext, useEffect, useMemo, useState } from "react";
-import Details from "../pages/details";
+import Details from "../pages/Details";
 import React from "react";
 import StudentAddForm from "./StudentAddForm";
 import {
