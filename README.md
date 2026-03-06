@@ -64,7 +64,6 @@ This project consists of a **React** frontend and a **Flask** backend. It featur
 #### 1. Backend Setup
 refer to the link (https://github.com/saif-shayeb/react-training-student-backend.git) for the backend repo
 ```bash
-cd backend
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
@@ -73,7 +72,6 @@ python app.py
 
 #### 2. Frontend Setup
 ```bash
-cd react-training-Students-manager
 npm install
 npm run dev
 ```
