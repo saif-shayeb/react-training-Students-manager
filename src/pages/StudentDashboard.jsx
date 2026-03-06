@@ -21,30 +21,30 @@ export default function StudentDashboard() {
 
     return (
         <div className="dashboard-container">
-            <div className="dashboard-header" style={{ marginBottom: '2.5rem' }}>
-                <h2 className="dashboard-title" style={{ marginBottom: '0.5rem' }}>My Personal Dashboard</h2>
-                <p style={{ color: 'var(--text-muted)' }}>Welcome back, {user?.name}! Here's your academic summary.</p>
+            <div className="dashboard-header" style={{ marginBottom: '1.5rem' }}>
+                <h2 className="dashboard-title" style={{ marginBottom: '0.25rem' }}>My Personal Dashboard</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem' }}>Welcome back, {user?.name}! Here's your academic summary.</p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: "2.5rem" }}>
-                <div className="card details-card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div className="grid-base" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))" }}>
+                <div className="card glass details-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                     <div style={{
-                        width: '5rem',
-                        height: '5rem',
+                        width: '4rem',
+                        height: '4rem',
                         borderRadius: '50%',
                         backgroundColor: 'var(--primary-light)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: 'var(--primary)',
-                        fontSize: '2rem',
-                        marginBottom: '1.5rem',
+                        fontSize: '1.5rem',
+                        marginBottom: '1rem',
                         boxShadow: '0 8px 16px rgba(79, 70, 229, 0.1)'
                     }}>
                         <FaUserGraduate />
                     </div>
 
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '2rem' }}>Student Profile</h2>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem' }}>Student Profile</h2>
 
                     {studentData ? (
                         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -75,9 +75,9 @@ export default function StudentDashboard() {
                     )}
                 </div>
 
-                <div className="card welcome-card" style={{ padding: '2.5rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>My Enrolled Courses</h3>
+                <div className="card glass welcome-card" style={{ padding: '2rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                        <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>My Enrolled Courses</h3>
                         <span style={{
                             padding: '0.375rem 0.75rem',
                             backgroundColor: 'var(--secondary)',

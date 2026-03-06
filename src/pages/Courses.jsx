@@ -39,40 +39,42 @@ export default function Courses() {
 
     return (
         <div className="dashboard-container">
-            <div className="dashboard-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2.5rem" }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className="dashboard-header" style={{ marginBottom: '1.5rem' }}>
+                <h2 className="dashboard-title" style={{ marginBottom: '0.25rem' }}>My Personal Dashboard</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem' }}>Welcome back, {user?.name}! Here's your academic summary.</p>
+            </div>
+
+            <div className="grid-base" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))" }}>
+                <div className="card glass details-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                     <div style={{
-                        width: '3.5rem',
-                        height: '3.5rem',
+                        width: '3rem',
+                        height: '3rem',
                         borderRadius: 'var(--radius-lg)',
                         backgroundColor: 'var(--primary-light)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: 'var(--primary)',
-                        fontSize: '1.5rem'
+                        fontSize: '1.25rem',
+                        marginBottom: '1rem'
                     }}>
                         <FaBookOpen />
                     </div>
-                    <div>
-                        <h2 className="dashboard-title" style={{ margin: 0, fontSize: '1.875rem' }}>Course Catalog</h2>
-                        <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>Explore and manage academic programs</p>
-                    </div>
+                    <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Course Catalog</h3>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>Explore and manage academic programs</p>
+                    {isAdmin && (
+                        <CustomBtn onClick={() => handleOpenModal()} style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.625rem",
+                        }}>
+                            <FaPlus /> Add New Course
+                        </CustomBtn>
+                    )}
                 </div>
-                {isAdmin && (
-                    <CustomBtn onClick={() => handleOpenModal()} style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.625rem",
-                    }}>
-                        <FaPlus /> Add New Course
-                    </CustomBtn>
-                )}
-            </div>
 
-            <div className="stats-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: '2rem' }}>
                 {courses.map(course => (
-                    <div key={course.id} className="card course-card" style={{
+                    <div key={course.id} className="card glass course-card" style={{
                         padding: "0",
                         overflow: 'hidden',
                         display: 'flex',

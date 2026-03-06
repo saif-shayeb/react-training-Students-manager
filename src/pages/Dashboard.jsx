@@ -67,14 +67,14 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header" style={{ marginBottom: '2.5rem' }}>
-        <h2 className="dashboard-title" style={{ marginBottom: '0.5rem' }}>Dashboard Overview</h2>
-        <p style={{ color: 'var(--text-muted)' }}>Welcome back! Here's what's happening today.</p>
+      <div className="dashboard-header" style={{ marginBottom: '1rem' }}>
+        <h2 className="dashboard-title" style={{ marginBottom: '0.125rem' }}>Dashboard Overview</h2>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Overview of system metrics</p>
       </div>
 
-      <div className="stats-grid">
+      <div className="grid-base grid-stats" style={{ marginBottom: '1.25rem' }}>
         {stats.map((stat, i) => (
-          <div key={i} className="card stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
+          <div key={i} className="card glass stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
             <div
               className="stat-icon"
               style={{
@@ -105,17 +105,13 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="dashboard-content-grid" style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
-        gap: '2rem'
-      }}>
-        <div className="card chart-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>GPA Distribution</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Student performance across all departments</p>
+      <div className="grid-base grid-charts" style={{ flex: 1, minHeight: 0 }}>
+        <div className="card glass chart-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ marginBottom: '0.75rem' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '0.125rem' }}>GPA Distribution</h3>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Student performance</p>
           </div>
-          <div style={{ flex: 1, minHeight: '300px' }}>
+          <div style={{ flex: 1, minHeight: 0 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={gpaData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
@@ -149,12 +145,12 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="card chart-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>Gender Diversity</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Student body composition breakdown</p>
+        <div className="card glass chart-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ marginBottom: '0.75rem' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '0.125rem' }}>Gender Diversity</h3>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Composition breakdown</p>
           </div>
-          <div style={{ flex: 1, minHeight: '300px', display: 'flex', alignItems: 'center' }}>
+          <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -184,17 +180,16 @@ export default function Dashboard() {
           <div style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '1.5rem',
-            marginTop: '1.5rem',
-            padding: '1rem',
+            gap: '1rem',
+            marginTop: '0.75rem',
+            padding: '0.5rem',
             backgroundColor: 'var(--bg-main)',
             borderRadius: 'var(--radius-lg)'
           }}>
             {genderData.map((d, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: 12, height: 12, borderRadius: '4px', backgroundColor: COLORS[i % COLORS.length] }}></div>
-                <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>{d.name}</span>
-                <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>({d.value})</span>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <div style={{ width: 10, height: 10, borderRadius: '3px', backgroundColor: COLORS[i % COLORS.length] }}></div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>{d.name}</span>
               </div>
             ))}
           </div>
