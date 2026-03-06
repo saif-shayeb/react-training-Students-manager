@@ -24,8 +24,16 @@ This project consists of a **React** frontend and a **Flask** backend. It featur
 
 
 <img width="1917" height="958" alt="login" src="https://github.com/user-attachments/assets/115bd74c-3c36-486b-8b9c-0801c1fe6dee" />
+<img width="1900" height="959" alt="register" src="https://github.com/user-attachments/assets/2ba5e1d8-8cb1-41c8-ac6f-9fa67f177404" />
+<img width="1919" height="958" alt="Screenshot 2026-03-06 170133" src="https://github.com/user-attachments/assets/d0d96daf-51ce-4d51-b1c3-1a88d90eb1b1" />
+<img width="1919" height="949" alt="Screenshot 2026-03-06 170143" src="https://github.com/user-attachments/assets/94805d99-212d-4ae5-95dd-4de0342bbc8a" />
+<img width="1919" height="962" alt="Screenshot 2026-03-06 165846" src="https://github.com/user-attachments/assets/bc5a5a98-ae89-4010-8f94-b6f7ab21f67e" />
+<img width="1919" height="957" alt="Screenshot 2026-03-06 165856" src="https://github.com/user-attachments/assets/8f3b4b47-7a85-4192-a831-6285b8a84623" />
+<img width="1904" height="959" alt="Screenshot 2026-03-06 165906" src="https://github.com/user-attachments/assets/05243e5f-c2c9-4cfd-acd5-0d3e6578b230" />
+<img width="1901" height="953" alt="Screenshot 2026-03-06 165830" src="https://github.com/user-attachments/assets/0dfcee2d-4029-4d9a-af1b-c6c2ddf7f063" />
 
 ---
+
 
 ## 🛠️ Tech Stack
 
