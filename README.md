@@ -31,6 +31,7 @@ This project consists of a **React** frontend and a **Flask** backend. It featur
 <img width="1919" height="957" alt="Screenshot 2026-03-06 165856" src="https://github.com/user-attachments/assets/8f3b4b47-7a85-4192-a831-6285b8a84623" />
 <img width="1904" height="959" alt="Screenshot 2026-03-06 165906" src="https://github.com/user-attachments/assets/05243e5f-c2c9-4cfd-acd5-0d3e6578b230" />
 <img width="1901" height="953" alt="Screenshot 2026-03-06 165830" src="https://github.com/user-attachments/assets/0dfcee2d-4029-4d9a-af1b-c6c2ddf7f063" />
+<img width="1919" height="954" alt="Screenshot 2026-03-06 171801" src="https://github.com/user-attachments/assets/2cf29539-3e41-49c0-8d74-b3c351994abd" />
 
 ---
 
