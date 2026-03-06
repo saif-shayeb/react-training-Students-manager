@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { StudentsProvider } from "../contexts/StudentContext";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { AuthProvider } from "../contexts/AuthContext";
+import { CourseProvider } from "../contexts/CourseContext";
 import ErrorBoundary from "../components/ErrorBoundary";
 
 export default function App() {
@@ -12,10 +13,12 @@ export default function App() {
     <AuthProvider>
       <ThemeProvider>
         <StudentsProvider>
-          <ErrorBoundary>
-            <ToastContainer />
-            <Outlet />
-          </ErrorBoundary>
+          <CourseProvider>
+            <ErrorBoundary>
+              <ToastContainer />
+              <Outlet />
+            </ErrorBoundary>
+          </CourseProvider>
         </StudentsProvider>
       </ThemeProvider>
     </AuthProvider>

@@ -1,8 +1,8 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import "../styles/StudentAddForm.css";
 import { toast } from "react-toastify";
-import React from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FaUserPlus, FaUserEdit } from "react-icons/fa";
 import { StudentsListDispatchContext } from "../contexts/StudentContext";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -73,14 +73,31 @@ function StudentAddForm({ studentEdit, isEdit, setShow }) {
   return (
     <div className="form-container">
       <div className="card">
-        <h2 className="form-title">
-          {isEdit ? "Edit Student" : "Add New Student"}
-        </h2>
-        <p className="form-subtitle">
-          {isEdit
-            ? "Update student information below."
-            : "Enter student information below to register them in the system."}
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{
+            width: '3.5rem',
+            height: '3.5rem',
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'var(--primary-light)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--primary)',
+            fontSize: '1.5rem'
+          }}>
+            {isEdit ? <FaUserEdit /> : <FaUserPlus />}
+          </div>
+          <div>
+            <h2 className="form-title" style={{ margin: 0 }}>
+              {isEdit ? "Edit Student" : "Add New Student"}
+            </h2>
+            <p className="form-subtitle" style={{ margin: 0 }}>
+              {isEdit
+                ? "Update student information below."
+                : "Enter student information below to register them in the system."}
+            </p>
+          </div>
+        </div>
 
         <form className="student-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-grid">

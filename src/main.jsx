@@ -6,6 +6,7 @@ import Layout from "./components/layout";
 import Dashboard from "./pages/Dashboard";
 import StudentAddForm from "./pages/StudentAddForm";
 import StudentsTable from "./pages/StudentsTable";
+import Courses from "./pages/Courses";
 import Notfound from "./pages/Notfound";
 import StudentDashboard from "./pages/StudentDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -63,6 +64,16 @@ createRoot(document.getElementById("root")).render(
                 <ProtectedRoute adminOnly={true}>
                   <ErrorBoundary>
                     <StudentsTable />
+                  </ErrorBoundary>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="courses"
+              element={
+                <ProtectedRoute>
+                  <ErrorBoundary>
+                    <Courses />
                   </ErrorBoundary>
                 </ProtectedRoute>
               }

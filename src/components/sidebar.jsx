@@ -6,6 +6,9 @@ import {
   FaSun,
   FaMoon,
   FaSignOutAlt,
+  FaBook,
+  FaUserPlus,
+  FaUsers,
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -19,12 +22,15 @@ export default function Sidebar({ isOpen, toggle }) {
 
   const isAdmin = user?.type === "admin";
 
-  const menu = [{ name: "Dashboard", path: "/", icon: <FaHome /> }];
+  const menu = [
+    { name: "Dashboard", path: "/", icon: <FaHome /> },
+    { name: "Courses", path: "/courses", icon: <FaBook /> }
+  ];
 
   if (isAdmin) {
     menu.push(
-      { name: "Add Student", path: "/add", icon: <FaPlus /> },
-      { name: "Students Table", path: "/table", icon: <FaTable /> },
+      { name: "Add Student", path: "/add", icon: <FaUserPlus /> },
+      { name: "Students Table", path: "/table", icon: <FaUsers /> },
     );
   }
 
