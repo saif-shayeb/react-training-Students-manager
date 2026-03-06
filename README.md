@@ -20,14 +20,10 @@ This project consists of a **React** frontend and a **Flask** backend. It featur
 
 ## 📸 Screenshots
 
-| Page | Preview |
-|------|---------|
 
-| **Login / Auth** | ![Login Page ](<img width="1917" height="958" alt="login" src="https://github.com/user-attachments/assets/c0c76667-665d-4485-9274-89e3378e2663" />) |
-| **Admin Dashboard** | ![Admin Dashboard Placeholder](https://via.placeholder.com/800x450?text=Admin+Dashboard+Screenshot) |
-| **Students Table** | ![Students Table Placeholder](https://via.placeholder.com/800x450?text=Students+Table+Screenshot) |
-| **Course Catalog** | ![Course Catalog Placeholder](https://via.placeholder.com/800x450?text=Course+Catalog+Screenshot) |
-| **Student Dashboard** | ![Student Dashboard Placeholder](https://via.placeholder.com/800x450?text=Student+Dashboard+Screenshot) |
+
+
+<img width="1917" height="958" alt="login" src="https://github.com/user-attachments/assets/115bd74c-3c36-486b-8b9c-0801c1fe6dee" />
 
 ---
 
